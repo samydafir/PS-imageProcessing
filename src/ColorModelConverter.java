@@ -10,10 +10,10 @@ public class ColorModelConverter {
 	public static void main(String[] args) throws IOException {
 		
 		File file = new File(args[0]);
-		int width = Integer.parseInt(args[1]);
-		int height = Integer.parseInt(args[2]);
-		BufferedImage img = ImageIO.read(file);
 		
+		BufferedImage img = ImageIO.read(file);
+		int width = img.getWidth();
+		int height = img.getHeight();
 		
 		int[][][] pixelRgbValues = new int[height][width][3];
 		
@@ -21,11 +21,11 @@ public class ColorModelConverter {
 			for(int j = 0; j < width; j++){
 				pixelRgbValues[i][j] = getPixelRgbValues(new Color(img.getRGB(j, i)));
 			}
-		
-		}
-		
+		}		
+		normalize(pixelRgbValues, height, width);
 	}
 
+	
 	public static int[] getPixelRgbValues(Color color){
 		int[] rgb = new int[3];
 		rgb[0] = color.getRed();
@@ -37,13 +37,11 @@ public class ColorModelConverter {
 	}
 	
 	
-	
-	public static double[][][] rgbToYuv(int[][][] rgbValues, int width, int height){
+	public static double[][][] rgbToYuv(int[][][] rgbValues, int height, int width){
 		
 		double[][][] yuvValues = new double[height][width][3];
 		int red, green, blue;
 		double y, u, v;
-		
 		for(int i = 0; i < height; i++){
 			for(int j = 0; j < width; j++){
 				red = rgbValues[i][j][0];
@@ -55,6 +53,8 @@ public class ColorModelConverter {
 				yuvValues[i][j][0] = y;
 				yuvValues[i][j][1] = u;
 				yuvValues[i][j][2] = v;
+				System.out.println(y + " " + u + " " + v);
+
 				
 			}
 		}
@@ -73,25 +73,36 @@ public class ColorModelConverter {
 				red = rgbVals[i][j][0];
 				green = rgbVals[i][j][1];
 				blue = rgbVals[i][j][2];
-				hsbVals[i][j] = Color.RGBtoHSB(red, green, blue, null);
+				Color.RGBtoHSB(red, green, blue, hsbVals[i][j]);
 			}
 		}
 		
 		
 		return hsbVals;
 	}
+	
+	
+	public static int[][][] normalize(int[][][] rgbVals, int height, int width){
+		
+		int[][][] normRGB = new int[height][width][3];
+		int red, green, blue, sum;
+		int _red, _green, _blue;
+		for(int i = 0; i < height; i++){
+			for(int j = 0; j < width; j++){
+				red = rgbVals[i][j][0];
+				green = rgbVals[i][j][1];
+				blue = rgbVals[i][j][2];
+				sum = red + green + blue;
+				_red = (int)((double)red / (double)sum * 255);
+				_green = (int)((double)green / (double)sum * 255);
+				_blue = (int)((double)blue / (double)sum * 255);
+				normRGB[i][j][0] = _red;
+				normRGB[i][j][1] = _green;
+				normRGB[i][j][2] = _blue;
+				System.out.println(_blue);
+			}
+		}
+		
+		return normRGB;
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
