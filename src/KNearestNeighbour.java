@@ -8,7 +8,7 @@ public class KNearestNeighbour {
 	
 	public KNearestNeighbour(){
 		
-		//TODO
+		//TODO: read collection of feature vectors to compare with
 		
 	}
 	

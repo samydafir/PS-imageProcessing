@@ -84,25 +84,27 @@ public class ColorModelConverter {
 	
 	public static int[][][] normalize(int[][][] rgbVals, int height, int width){
 		
-		int[][][] normRGB = new int[height][width][3];
-		int red, green, blue, sum;
-		int _red, _green, _blue;
+		int pixels = height * width;
+		double[] rgbMean = {0,0,0};
 		for(int i = 0; i < height; i++){
 			for(int j = 0; j < width; j++){
-				red = rgbVals[i][j][0];
-				green = rgbVals[i][j][1];
-				blue = rgbVals[i][j][2];
-				sum = red + green + blue;
-				_red = (int)((double)red / (double)sum * 255);
-				_green = (int)((double)green / (double)sum * 255);
-				_blue = (int)((double)blue / (double)sum * 255);
-				normRGB[i][j][0] = _red;
-				normRGB[i][j][1] = _green;
-				normRGB[i][j][2] = _blue;
-				System.out.println(_blue);
+				rgbMean[0] += rgbVals[i][j][0];
+				rgbMean[1] += rgbVals[i][j][1];
+				rgbMean[2] += rgbVals[i][j][2];
 			}
 		}
+		rgbMean[0] /= pixels;
+		rgbMean[1] /= pixels;
+		rgbMean[2] /= pixels;
 		
+		int[][][] normRGB = new int[height][width][3];
+		for(int i = 0; i < height; i++){
+			for(int j = 0; j < width; j++){
+				normRGB[i][j][0] = (int)(rgbVals[i][j][0] - rgbMean[0]);
+				normRGB[i][j][1] = (int)(rgbVals[i][j][1] - rgbMean[1]);
+				normRGB[i][j][0] = (int)(rgbVals[i][j][2] - rgbMean[2]);
+			}
+		}
 		return normRGB;
 	}
 }
