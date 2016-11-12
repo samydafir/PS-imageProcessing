@@ -1,12 +1,6 @@
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.io.File;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
-
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -17,27 +11,30 @@ public class EdgeDetection {
 
 	public static void main(String[] args) throws IOException {
 		
+		detect("examples/edge/src1.jpg", "examples/edge/dst1.jpg", 60, 60/3);
+		detect("examples/edge/src2.jpg", "examples/edge/dst2.jpg", 100, 100/3);
+		
+	}
+	
+	
+	public static void detect(String srcPath, String dstPath, int highThresh, int lowThresh) throws IOException {
+		
 		Mat src, edge;
 
-		
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		
-		File input = new File("/home/sebastian/Downloads/sky.jpg");
-		BufferedImage image;
-			
-		image = ImageIO.read(input);		
-		src = new Mat(image.getHeight(),image.getWidth(), CvType.CV_8UC3);
-		edge = new Mat(image.getHeight(),image.getWidth(), CvType.CV_8UC3);
+				
+		src = new Mat();
+		edge = new Mat();
 		
 		
-		src = Imgcodecs.imread("/home/sebastian/Downloads/sky.jpg");
+		src = Imgcodecs.imread(srcPath);
 		edge.create( src.size(), src.type() );
 		
 		Imgproc.cvtColor(src, src, Imgproc.COLOR_BGR2GRAY);
 		Imgproc.blur(src, src, new Size(3, 3));
-		Imgproc.Canny(src, edge, 50, 50/3);
+		Imgproc.Canny(src, edge, lowThresh, highThresh);
 
-		Imgcodecs.imwrite("/home/sebastian/Downloads/sky2.jpg", edge);
+		Imgcodecs.imwrite(dstPath, edge);
 	}
 
 }
