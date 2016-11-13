@@ -71,16 +71,18 @@ public class PreprocessImage {
 	          
 	   Mat src = Imgcodecs.imread("output\\normalized.jpg");
 
-       Mat luminance = new Mat();
-       Core.extractChannel(src, luminance, 0);;
+	   for(int i = 0; i < 3; i++){
+		   Mat channel = new Mat();
+		   Core.extractChannel(src, channel, i);;
        
-       CLAHE clahe = Imgproc.createCLAHE();
-       clahe.setClipLimit(1);
-       clahe.setTilesGridSize(new Size(4,4));
-       clahe.apply(luminance, luminance);
-
-       Core.insertChannel(luminance, src, 0);
-       
+		   CLAHE clahe = Imgproc.createCLAHE();
+		   clahe.setClipLimit(1);
+		   clahe.setTilesGridSize(new Size(4,4));
+		   clahe.apply(channel, channel);
+		   
+		   Core.insertChannel(channel, src, i);
+	   }
+		   
        Imgcodecs.imwrite("output\\clahe.jpg", src);
        
        return src;
