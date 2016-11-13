@@ -13,7 +13,7 @@ public class PreprocessImage {
 	public static void main( String[] args ) throws IOException {
 	
 		String[] colorModes = {"lab", "yuv", "hsl", "hsv"};
-		String inputImagePath = "E:\\OneDrive - stud.sbg.ac.at\\University\\WS16\\Grundlagen Bildverarbeitung\\PS-imageProcessing\\example.jpg";
+		String inputImagePath = "example.jpg";
 		
 		try{
 			for (String currMode: colorModes){
@@ -102,11 +102,3 @@ public class PreprocessImage {
        
    }       
 }
-
-
-
-
-
-
-
-
