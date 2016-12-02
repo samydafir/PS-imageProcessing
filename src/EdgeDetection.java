@@ -53,7 +53,6 @@ public class EdgeDetection {
 		Imgcodecs.imwrite(dstPath + "_sobelX.jpg", sobX);
 		Imgcodecs.imwrite(dstPath + "_sobelY.jpg", sobY);
 		Imgcodecs.imwrite(dstPath + "_laplacian.jpg", laplace);
-		Imgcodecs.imwrite(dstPath + "_test.jpg", test);
 		
 		
 	}
