@@ -16,16 +16,21 @@ public class KNearestNeighbour {
 		
 		LinkedList<FeatureVector> results = new LinkedList<>();
 		HashMap<String, Integer> catStore = new HashMap<>();
+		FeatureVector currMax = null;
 		
 		for(FeatureVector currVec: neighbours){
 			if(results.size() < k){
 				results.add(currVec);
 			}else{
 				for(FeatureVector resVec: results){
-					if(currVec.getDifference(sample) > resVec.getDifference(sample)){
-						results.remove(resVec);
-						results.add(currVec);
+					currMax = resVec;
+					if(resVec.getDifference(sample) > currMax.getDifference(sample)){
+						currMax = resVec;
 					}
+				}
+				if(currVec.getDifference(sample) < currMax.getDifference(sample)){
+					results.remove(currMax);
+					results.add(currVec);
 				}
 			}
 		}

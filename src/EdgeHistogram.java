@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.opencv.core.Core;
@@ -32,6 +33,7 @@ public class EdgeHistogram {
 	private final float maxEdgeLength;	// Max value that should be considered in the histogram
 	
 	private List<Mat> histMatList;
+	private LinkedList<Integer> edgeLengths; //List containing lengths of all found edges
 	
 	
 	public EdgeHistogram(String srcPath, int nrOfBins, int maxEdgeLength, int highThresh, int lowThresh) {
@@ -63,7 +65,9 @@ public class EdgeHistogram {
 	}
 	
 	private void getEdgeLengths() {
-		// TODO: save edge lengths in lengthMat
+		EdgeLengthExtractor elx = new EdgeLengthExtractor(cannyMat);
+		elx.computeEdgeLenghts();
+		edgeLengths = elx.getEdgeLengths();
 	}
 	
 	public void calcHistogram() {
