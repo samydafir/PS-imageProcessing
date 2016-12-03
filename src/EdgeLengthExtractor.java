@@ -9,10 +9,10 @@ public class EdgeLengthExtractor {
 	private LinkedList<Integer> lengths = new LinkedList<>();
 	private HashSet<String> countedPixels = new HashSet<>();
 	
+	
+	
 	public EdgeLengthExtractor(Mat input) {
 		imageWithEdges = input;
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		computeEdgeLenghts();
 	}
 	
 	public void computeEdgeLenghts(){
