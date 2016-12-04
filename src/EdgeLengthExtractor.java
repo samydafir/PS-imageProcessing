@@ -1,6 +1,5 @@
 import java.util.HashSet;
 import java.util.LinkedList;
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
 
 public class EdgeLengthExtractor {
@@ -8,6 +7,7 @@ public class EdgeLengthExtractor {
 	private Mat imageWithEdges;
 	private LinkedList<Integer> lengths = new LinkedList<>();
 	private HashSet<String> countedPixels = new HashSet<>();
+	private int edgeColorLimit = 200;
 	
 	
 	
@@ -20,7 +20,7 @@ public class EdgeLengthExtractor {
 		
 		for(int i = 0; i < imageWithEdges.height(); i++){
 			for(int j = 0; j < imageWithEdges.width(); j++){
-				if(imageWithEdges.get(i, j)[0] > 240 && !countedPixels.contains((j + "x" + i)))
+				if(imageWithEdges.get(i, j)[0] >= edgeColorLimit && !countedPixels.contains((j + "x" + i)))
 					countedPixels.add(j + "x" + i);
 					currLength = measureEdge(i, j);
 					if(currLength > 0)
@@ -35,7 +35,7 @@ public class EdgeLengthExtractor {
 		if(y < 0 || x  < 0) 
 			return 0;
 		
-		if(!countedPixels.contains((y + "x" + x)) && imageWithEdges.get(y, x) != null && imageWithEdges.get(y, x)[0] > 240){
+		if(!countedPixels.contains((y + "x" + x)) && imageWithEdges.get(y, x) != null && imageWithEdges.get(y, x)[0] >= edgeColorLimit){
 			countedPixels.add(y + "x"+ x);
 			length += 1;
 			length += measureEdge(y - 1, x - 1);

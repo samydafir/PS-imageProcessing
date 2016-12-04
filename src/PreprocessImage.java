@@ -37,19 +37,19 @@ public class PreprocessImage {
 	   
 	   switch(colorMode){
 	   case "hsv":
-		   colorSpace = Imgproc.COLOR_BGR2HSV;
+		   colorSpace = Imgproc.COLOR_RGB2HSV;
 		   break;
 	   case "hsl":
-		   colorSpace = Imgproc.COLOR_BGR2HLS;
+		   colorSpace = Imgproc.COLOR_RGB2HLS;
 		   break;
 	   case "yuv":
-		   colorSpace = Imgproc.COLOR_BGR2YUV;
+		   colorSpace = Imgproc.COLOR_RGB2YUV;
 		   break;
 	   case "lab":
-		   colorSpace = Imgproc.COLOR_BGR2Lab;
+		   colorSpace = Imgproc.COLOR_RGB2Lab;
 		   break;
 	   case "rgb":
-		   colorSpace = Imgproc.COLOR_Lab2BGR;
+		   colorSpace = Imgproc.COLOR_Lab2RGB;
 		   break;
 	   default:
 		   colorSpace = 0;

@@ -72,10 +72,73 @@ public class EdgeHistogram {
 	
 	public void calcHistogram() {
 		extractEdges();
-		Imgproc.calcHist(histMatList, new MatOfInt(0), mask, histMat, new MatOfInt(nrOfBins), new MatOfFloat(0f, this.maxEdgeLength));
+		getEdgeLengths();
+		
+		//commented for testing
+		//Imgproc.calcHist(histMatList, new MatOfInt(0), mask, histMat, new MatOfInt(nrOfBins), new MatOfFloat(0f, this.maxEdgeLength));
 	}
 	
 	public Mat getHistogram() {
 		return this.histMat;
 	}
+	
+	public void evaluate(int minThreshold, int maxThreshold, int numOfBins){
+		int min = edgeLengths.getFirst();
+		int max = edgeLengths.getFirst();
+		int diff, rangePerBin;
+		int[] amounts = new int[numOfBins];
+		
+		
+		for(int currLength: edgeLengths){
+			if(currLength > max){
+				max = currLength;
+			}else if(currLength < min){
+				min = currLength;
+			}			
+		}
+		
+		if(min < minThreshold){
+			min = minThreshold;
+		}
+		if(max > maxThreshold)
+			max = maxThreshold;
+		
+		diff = max - min;
+		rangePerBin = (int)Math.round((double)diff / (double)numOfBins);
+		
+		for(int currLength: edgeLengths){
+			if(currLength >= min && currLength <= max)
+			amounts[((int)Math.ceil((double)currLength / (double)max * numOfBins)) - 1] ++;
+		}
+		
+		System.out.println("minimum: " + min);
+		System.out.println("maximum: " + max);
+		System.out.println("rangePerBin: " + rangePerBin);
+		System.out.println("bin values:");
+		for(int i = 0; i < amounts.length; i++){
+			System.out.print(amounts[i] + " |");
+			System.out.println("range: " + (minThreshold + i * rangePerBin) + "-" + (minThreshold + (i + 1) * rangePerBin));
+		}
+		
+		
+		
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
