@@ -88,27 +88,18 @@ public class EdgeHistogram {
 		int diff, rangePerBin;
 		int[] amounts = new int[numOfBins];
 		
+		diff = maxThreshold - minThreshold;
+		rangePerBin = (int)Math.round((double)diff / (double)numOfBins);
 		
 		for(int currLength: edgeLengths){
+			
 			if(currLength > max){
 				max = currLength;
 			}else if(currLength < min){
 				min = currLength;
-			}			
-		}
-		
-		if(min < minThreshold){
-			min = minThreshold;
-		}
-		if(max > maxThreshold)
-			max = maxThreshold;
-		
-		diff = max - min;
-		rangePerBin = (int)Math.round((double)diff / (double)numOfBins);
-		
-		for(int currLength: edgeLengths){
-			if(currLength >= min && currLength <= max)
-			amounts[((int)Math.ceil((double)currLength / (double)max * numOfBins)) - 1] ++;
+			}
+			if(currLength >= minThreshold && currLength <= maxThreshold)
+			amounts[((int)Math.ceil((double)currLength / (double)maxThreshold * numOfBins)) - 1] ++;
 		}
 		
 		System.out.println("minimum: " + min);
@@ -118,10 +109,7 @@ public class EdgeHistogram {
 		for(int i = 0; i < amounts.length; i++){
 			System.out.print(amounts[i] + " |");
 			System.out.println("range: " + (minThreshold + i * rangePerBin) + "-" + (minThreshold + (i + 1) * rangePerBin));
-		}
-		
-		
-		
+		}		
 	}
 }
 
