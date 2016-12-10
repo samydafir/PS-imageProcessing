@@ -1,4 +1,5 @@
 
+import java.io.File;
 import java.io.IOException;
 
 import org.opencv.core.Core;
@@ -9,29 +10,42 @@ import org.opencv.imgproc.CLAHE;
 import org.opencv.imgproc.Imgproc;
 
 public class PreprocessImage {
+	
+	static int count;
 
 	public static void main( String[] args ) throws IOException {
 	
 		String[] colorModes = {"lab", "yuv", "hsl", "hsv"};
-		String inputImagePath = "example.jpg";
+		String inputImagePath = "images";
+		String[] folders = new File(inputImagePath).list();
+		File currentFolder;
+		File outputFolder;
 		
-		try{
-			for (String currMode: colorModes){
-				colorSpaceConvert(inputImagePath, currMode);
-				
+		for(String currFolder: folders){
+			currentFolder = new File(inputImagePath + "\\" + currFolder);
+			if(currentFolder.isDirectory()){
+				for(String currMode: colorModes){
+					outputFolder = new File("output\\" + currFolder + "\\" + currMode + "\\");
+					if(!outputFolder.exists()){
+						outputFolder.mkdirs();
+					}
+					count = 0;
+					for(String currImage: new File(inputImagePath + "\\" + currFolder).list()){
+						//System.out.println(count);
+						normalize(inputImagePath + "\\" + currFolder + "\\" + currImage);
+						clahe("output\\normalized.jpg");
+						colorSpaceConvert("output\\clahe.jpg", currMode,  "output\\" + currFolder + "\\" + currMode + "\\" + count + ".jpg");
+						count++;
+					}
+				}
 			}
-			normalize(inputImagePath);
-			clahe(inputImagePath);
-		} catch (IOException e){
-			e.printStackTrace();
-		}	
+		}
 	}
 
 
 
 
-
-   public static Mat colorSpaceConvert(String path, String colorMode) throws IOException{
+   public static Mat colorSpaceConvert(String path, String colorMode, String output) throws IOException{
 	   
 	   int colorSpace;
 	   
@@ -61,7 +75,7 @@ public class PreprocessImage {
 
        Imgproc.cvtColor(src, src, colorSpace);
        
-       Imgcodecs.imwrite("output\\" + colorMode + ".jpg", src);       
+       Imgcodecs.imwrite(output, src);       
        
        return src;
    }
@@ -69,7 +83,7 @@ public class PreprocessImage {
    
    public static Mat clahe(String path) throws IOException{
 	          
-	   Mat src = Imgcodecs.imread("output\\normalized.jpg");
+	   Mat src = Imgcodecs.imread(path);
 
 	   for(int i = 0; i < 3; i++){
 		   Mat channel = new Mat();
