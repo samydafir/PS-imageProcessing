@@ -9,14 +9,22 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.CLAHE;
 import org.opencv.imgproc.Imgproc;
 
+/**
+ * Call System.loadLibrary( Core.NATIVE_LIBRARY_NAME ) before using this class.
+ */
 public class PreprocessImage {
 	
-	static int count;
-
-	public static void main( String[] args ) throws IOException {
+	private int count;
+	private String inputImagePath;
+	
+	public PreprocessImage(String inputImagePath){
+		this.inputImagePath = inputImagePath;
+		count = 0;
+	}
+	
+	public void convert() throws IOException{
 	
 		String[] colorModes = {"lab", "yuv", "hsl", "hsv"};
-		String inputImagePath = "images";
 		String[] folders = new File(inputImagePath).list();
 		File currentFolder;
 		File outputFolder;
@@ -31,7 +39,6 @@ public class PreprocessImage {
 					}
 					count = 0;
 					for(String currImage: new File(inputImagePath + "\\" + currFolder).list()){
-						//System.out.println(count);
 						normalize(inputImagePath + "\\" + currFolder + "\\" + currImage);
 						clahe("output\\normalized.jpg");
 						colorSpaceConvert("output\\clahe.jpg", currMode,  "output\\" + currFolder + "\\" + currMode + "\\" + count + ".jpg");
@@ -45,7 +52,7 @@ public class PreprocessImage {
 
 
 
-   public static Mat colorSpaceConvert(String path, String colorMode, String output) throws IOException{
+   private Mat colorSpaceConvert(String path, String colorMode, String output) throws IOException{
 	   
 	   int colorSpace;
 	   
@@ -68,9 +75,7 @@ public class PreprocessImage {
 	   default:
 		   colorSpace = 0;
 	   }
-	   
-	   System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
-	   
+	   	   
 	   Mat src = Imgcodecs.imread(path);
 
        Imgproc.cvtColor(src, src, colorSpace);
@@ -81,7 +86,7 @@ public class PreprocessImage {
    }
    
    
-   public static Mat clahe(String path) throws IOException{
+   private Mat clahe(String path) throws IOException{
 	          
 	   Mat src = Imgcodecs.imread(path);
 
@@ -104,9 +109,7 @@ public class PreprocessImage {
    
    
    
-   public static void normalize(String path) throws IOException{
-
-	   System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
+   private void normalize(String path) throws IOException{
 
 	   Mat src = Imgcodecs.imread(path);
        Core.normalize(src, src, 255, 0, Core.NORM_MINMAX);
