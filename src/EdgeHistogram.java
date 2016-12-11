@@ -82,11 +82,12 @@ public class EdgeHistogram {
 		return this.histMat;
 	}
 	
-	public void evaluate(int minThreshold, int maxThreshold, int numOfBins){
+	public String evaluate(int minThreshold, int maxThreshold, int numOfBins, boolean print){
 		int min = edgeLengths.getFirst();
 		int max = edgeLengths.getFirst();
 		int diff, rangePerBin;
 		int[] amounts = new int[numOfBins];
+		String result;
 		
 		diff = maxThreshold - minThreshold;
 		rangePerBin = (int)Math.round((double)diff / (double)numOfBins);
@@ -102,14 +103,23 @@ public class EdgeHistogram {
 			amounts[((int)Math.ceil((double)currLength / (double)maxThreshold * numOfBins)) - 1] ++;
 		}
 		
-		System.out.println("minimum: " + min);
-		System.out.println("maximum: " + max);
-		System.out.println("rangePerBin: " + rangePerBin);
-		System.out.println("bin values:");
+		StringBuilder sb = new StringBuilder();
+		
+		if(print){
+			System.out.println("minimum: " + min);
+			System.out.println("maximum: " + max);
+			System.out.println("rangePerBin: " + rangePerBin);
+			System.out.println("bin values:");
+		}
 		for(int i = 0; i < amounts.length; i++){
-			System.out.print(amounts[i] + " |");
-			System.out.println("range: " + (minThreshold + i * rangePerBin) + "-" + (minThreshold + (i + 1) * rangePerBin));
-		}		
+			sb.append(amounts[i] + "\t");
+			if(print){
+				System.out.print(amounts[i] + " |");
+				System.out.println("range: " + (minThreshold + i * rangePerBin) + "-" + (minThreshold + (i + 1) * rangePerBin));
+			}
+		}
+		result = sb.toString();
+		return result.substring(0, result.length() - 1);		
 	}
 }
 
