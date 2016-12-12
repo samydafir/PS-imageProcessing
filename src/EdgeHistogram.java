@@ -119,24 +119,6 @@ public class EdgeHistogram {
 			}
 		}
 		result = sb.toString();
-		return result.substring(0, result.length() - 3);
+		return result.substring(0, result.length() - 1);
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

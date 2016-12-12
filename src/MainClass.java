@@ -28,7 +28,7 @@ public class MainClass {
 		*/
 		
 		//uncomment to create the file containing edge count and category of all images
-		//createHistFile("images", min, max, bins, print);
+		createHistFile("images", min, max, bins, print);
 		
 		//create feature vector for test image:
 		EdgeHistogram eh = new EdgeHistogram("test.png", 5, 1000, 10, 1);
