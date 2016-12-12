@@ -1,3 +1,7 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -6,10 +10,23 @@ public class KNearestNeighbour {
 	
 	private LinkedList<FeatureVector> neighbours = new LinkedList<>();
 	
-	public KNearestNeighbour(){
+	public KNearestNeighbour(String histogramFile) throws IOException{
+		BufferedReader input = new BufferedReader(new FileReader(histogramFile));
 		
-		//TODO: read collection of feature vectors to compare with
-		
+		String currLine = input.readLine();
+		ArrayList<Double> vector;
+		String[] histValues;
+
+		while(currLine != null){
+			histValues = currLine.split(",");
+			vector = new ArrayList<>();
+			for(int i = 0; i < histValues.length - 1; i++){
+				vector.add(Double.parseDouble(histValues[i]));
+			}
+			neighbours.add(new FeatureVector(vector, histValues[histValues.length - 1]));
+			currLine = input.readLine();
+		}
+		input.close();
 	}
 	
 	public String getKnnCategory(FeatureVector sample, int k){
@@ -22,8 +39,8 @@ public class KNearestNeighbour {
 			if(results.size() < k){
 				results.add(currVec);
 			}else{
+				currMax = results.getFirst();
 				for(FeatureVector resVec: results){
-					currMax = resVec;
 					if(resVec.getDifference(sample) > currMax.getDifference(sample)){
 						currMax = resVec;
 					}

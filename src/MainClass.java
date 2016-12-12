@@ -2,6 +2,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.opencv.core.Core;
 
@@ -10,6 +12,13 @@ public class MainClass {
 
 	public static void main(String[] args) throws IOException {
 		
+		int min = 100;
+		int max = 700;
+		int bins = 15;
+		boolean print = false;
+		String[] histValues;
+		ArrayList<Double> vector = new ArrayList<>();
+
 		
 		System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
 		/*
@@ -17,7 +26,22 @@ public class MainClass {
 		PreprocessImage ppi = new PreprocessImage("images");
 		ppi.convert();
 		*/
-		createHistFile("images", 100, 1000, 20, false);
+		
+		//uncomment to create the file containing edge count and category of all images
+		//createHistFile("images", min, max, bins, print);
+		
+		//create feature vector for test image:
+		EdgeHistogram eh = new EdgeHistogram("test.png", 5, 1000, 10, 1);
+		eh.calcHistogram();
+		histValues = eh.evaluate(min, max, bins, print).split(",");
+		for(int i = 0; i < histValues.length; i++){
+			vector.add(Double.parseDouble(histValues[i]));
+		}
+		
+		//execute KNN:
+		KNearestNeighbour a = new KNearestNeighbour("histograms_100-700_15.txt");
+		System.out.println(a.getKnnCategory(new FeatureVector(vector,"0"),3));
+
 	}
 	
 	
@@ -38,7 +62,7 @@ public class MainClass {
 					eh = new EdgeHistogram(inputImagePath + "\\" + currFolder + "\\" + currImage, 5, 1000, 10, 1);
 					eh.calcHistogram();
 					output.append((eh.evaluate(min, max, numOfBins, print)));
-					output.append("\t" + cat);
+					output.append("," + cat);
 					output.append("\n");
 				}
 				cat++;

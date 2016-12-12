@@ -112,14 +112,14 @@ public class EdgeHistogram {
 			System.out.println("bin values:");
 		}
 		for(int i = 0; i < amounts.length; i++){
-			sb.append(amounts[i] + "\t");
+			sb.append(amounts[i] + ".0,");
 			if(print){
 				System.out.print(amounts[i] + " |");
 				System.out.println("range: " + (minThreshold + i * rangePerBin) + "-" + (minThreshold + (i + 1) * rangePerBin));
 			}
 		}
 		result = sb.toString();
-		return result.substring(0, result.length() - 1);		
+		return result.substring(0, result.length() - 3);
 	}
 }
 
