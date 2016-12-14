@@ -34,4 +34,12 @@ public class FeatureVector {
 		return this.category;
 	}
 	
+	public boolean equals(FeatureVector other){
+		if(other.getVector().equals(this.vector) && other.getCategory().equals(this.category)){
+			return true;
+		}
+		return false;
+		
+	}
+	
 }

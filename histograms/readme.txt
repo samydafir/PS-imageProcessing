@@ -1,0 +1,2 @@
+file format in this folder:
+histograms_lowerLengthBound_upperLengthBound_ numOfBins.txt
