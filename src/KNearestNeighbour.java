@@ -35,12 +35,7 @@ public class KNearestNeighbour {
 		HashMap<String, Integer> catStore = new HashMap<>();
 		FeatureVector currMax = null;
 		
-		for(FeatureVector currVec: neighbours){
-			if(currVec.equals(sample)){
-				System.out.println("skip");
-				continue;
-			}
-			
+		for(FeatureVector currVec: neighbours){			
 			if(results.size() < k){
 				results.add(currVec);
 			}else{
@@ -60,7 +55,6 @@ public class KNearestNeighbour {
 		String currCat;
 		for(FeatureVector FVec: results){
 			currCat = FVec.getCategory();
-			System.out.println(FVec.getCategory());
 			if(catStore.containsKey(currCat)){
 				catStore.put(currCat, catStore.get(currCat) + 1);
 			}else{

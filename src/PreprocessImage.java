@@ -24,7 +24,7 @@ public class PreprocessImage {
 	
 	public void convert() throws IOException{
 	
-		String[] colorModes = {"lab", "yuv", "hsl", "hsv"};
+		String[] colorModes = {/*"lab", "yuv", "hsl", "hsv", */"enhanced_rgb"};
 		String[] folders = new File(inputImagePath).list();
 		File currentFolder;
 		File outputFolder;
@@ -33,7 +33,7 @@ public class PreprocessImage {
 			currentFolder = new File(inputImagePath + "\\" + currFolder);
 			if(currentFolder.isDirectory()){
 				for(String currMode: colorModes){
-					outputFolder = new File("output\\" + currFolder + "\\" + currMode + "\\");
+					outputFolder = new File(currMode + "\\" + currFolder);
 					if(!outputFolder.exists()){
 						outputFolder.mkdirs();
 					}
@@ -41,7 +41,7 @@ public class PreprocessImage {
 					for(String currImage: new File(inputImagePath + "\\" + currFolder).list()){
 						normalize(inputImagePath + "\\" + currFolder + "\\" + currImage);
 						clahe("output\\normalized.jpg");
-						colorSpaceConvert("output\\clahe.jpg", currMode,  "output\\" + currFolder + "\\" + currMode + "\\" + count + ".jpg");
+						colorSpaceConvert("output\\clahe.jpg", currMode,  outputFolder +  "\\" + count + ".jpg");
 						count++;
 					}
 				}
@@ -75,14 +75,16 @@ public class PreprocessImage {
 	   default:
 		   colorSpace = 0;
 	   }
-	   	   
+	   
 	   Mat src = Imgcodecs.imread(path);
 
-       Imgproc.cvtColor(src, src, colorSpace);
+	   if(colorSpace != 0){
+		   Imgproc.cvtColor(src, src, colorSpace);
+	   }
        
-       Imgcodecs.imwrite(output, src);       
-       
-       return src;
+	   Imgcodecs.imwrite(output, src);
+		 
+	   return src;
    }
    
    

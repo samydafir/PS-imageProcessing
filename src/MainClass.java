@@ -11,25 +11,27 @@ public class MainClass {
 
 	static int min = 100;
 	static int max = 1000;
-	static int histBins = 10;
+	static int histBins = 20;
 	static boolean print = false;
+	static int lowThreshold = 60;
+	static int highThreshold = 20;
+	
 
 	public static void main(String[] args) throws IOException {
 		
 		System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
 
-		/* uncomment to enable preprocessing of source folder
-		PreprocessImage ppi = new PreprocessImage("images");
+		//uncomment to enable preprocessing of source folder
+		PreprocessImage ppi = new PreprocessImage("rgb");
 		ppi.convert();
-		*/
+		
 		
 		//uncomment to create the file containing edge count and category of all images
-		//createHistFile("images");
+		//createHistFile("hsl");
 
 		//run tests using the created hist-file and images in the specified folder.
 		//also specify category
-		runTests("test", "6");
-
+		//runTests("test", "3");
 	}
 	
 	
@@ -47,10 +49,10 @@ public class MainClass {
 			currentFolder = new File(inputImagePath + "\\" + currFolder);
 			if(currentFolder.isDirectory()){
 				for(String currImage: new File(inputImagePath + "\\" + currFolder).list()){
-					eh = new EdgeHistogram(inputImagePath + "\\" + currFolder + "\\" + currImage, 5, 1000, 10, 1);
+					eh = new EdgeHistogram(inputImagePath + "\\" + currFolder + "\\" + currImage, 10, 1000, lowThreshold, highThreshold);
 					eh.calcHistogram();
 					output.append((eh.evaluate(min, max, histBins, print)));
-					output.append("," + cat);
+					output.append("," + currFolder);
 					output.append("\n");
 				}
 				cat++;
@@ -72,7 +74,7 @@ public class MainClass {
 		
 		for(String currTestImage: testImages){
 			//create feature vector for test image:
-			eh = new EdgeHistogram(testFolder + "\\" + currTestImage, 5, 1000, 10, 1);
+			eh = new EdgeHistogram(testFolder + "\\" + currTestImage, 10, 1000, lowThreshold, highThreshold);
 			eh.calcHistogram();
 			histValues = eh.evaluate(min, max, histBins, print).split(",");
 			for(int i = 0; i < histValues.length; i++){
@@ -80,11 +82,11 @@ public class MainClass {
 			}
 		
 			//execute KNN:
-			foundCategory = a.getKnnCategory(new FeatureVector(vector,category),7);
+			foundCategory = a.getKnnCategory(new FeatureVector(vector,category),3);
 			if(foundCategory.equals(category)){
 				correctClass++;
 			}
-			//System.out.println("Class: " + foundCategory);
+			System.out.println("Class: " + foundCategory);
 		}
 		System.out.println((double)correctClass / (double)testImages.length * 100 + "%");
 	}
