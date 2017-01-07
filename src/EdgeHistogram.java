@@ -22,7 +22,11 @@ public class EdgeHistogram {
 	
 	private Mat srcMat;		// source Mat
 	private Mat cannyMat;	// Mat that contains the edge detected image
+	private Mat sobelMatX;	// Mat that contains first derivation in x of image
+	private Mat sobelMatY;	// Mat that contains first derivation in y of image
+	private Mat greyMat; 	// Mat containing grey image of src image
 	private Mat lengthMat;	// Mat that contains the lengths of the edges
+	private Mat edgeDirMat;	// Mat that contains the orientation of the edges
 	private Mat histMat;	// final Mat that contains the histogram
 	private Mat mask;		// mask can be used for histogram calculation, if we don't want to take a histogram of the full pic
 	
@@ -34,6 +38,7 @@ public class EdgeHistogram {
 	
 	private List<Mat> histMatList;
 	private LinkedList<Integer> edgeLengths; //List containing lengths of all found edges
+	private LinkedList<Double> edgeOrientation; //List containing orientation
 	
 	
 	public EdgeHistogram(String srcPath, int nrOfBins, int maxEdgeLength, int highThresh, int lowThresh) {
@@ -46,7 +51,11 @@ public class EdgeHistogram {
 		this.srcPath = srcPath;
 		this.srcMat = new Mat();
 		this.cannyMat = new Mat();
+		this.sobelMatX  = new Mat(); 
+		this.sobelMatY = new Mat();
+		this.greyMat = new Mat();
 		this.lengthMat = new Mat();
+		this.edgeDirMat = new Mat();
 		this.mask = new Mat();
 		
 		this.srcMat = Imgcodecs.imread(srcPath);
@@ -55,13 +64,21 @@ public class EdgeHistogram {
 		histMatList = new ArrayList<Mat>();
 	}
 	
+	private void convertToGrey(){
+		Imgproc.cvtColor(srcMat, greyMat, Imgproc.COLOR_RGB2GRAY);
+	}
+	
 	private void extractEdges() {
-		Imgproc.cvtColor(srcMat, cannyMat, Imgproc.COLOR_RGB2GRAY);
-		Imgproc.blur(cannyMat, cannyMat, new Size(3, 3));
+		Imgproc.blur(greyMat, cannyMat, new Size(3, 3));
 		Imgproc.Canny(cannyMat, cannyMat, lowThresh, highThresh);
-		histMatList.add(cannyMat);
-		
-		getEdgeLengths();
+		histMatList.add(cannyMat);		
+	}
+	
+	private void extractFirstDerivative(){
+		Imgproc.Sobel(greyMat, sobelMatX, srcMat.depth(), 1, 0);
+		Imgproc.Sobel(greyMat, sobelMatY, srcMat.depth(), 0, 1);
+		Core.convertScaleAbs(sobelMatX, sobelMatX);
+		Core.convertScaleAbs(sobelMatY, sobelMatY);
 	}
 	
 	private void getEdgeLengths() {
@@ -69,10 +86,20 @@ public class EdgeHistogram {
 		elx.computeEdgeLenghts();
 		edgeLengths = elx.getEdgeLengths();
 	}
-	
+
+	private void getEdgeOrientation(){
+		Core.addWeighted( sobelMatX, 0.5, sobelMatY, 0.5, 0, edgeDirMat);
+		EdgeOrientationExtractor eox = new EdgeOrientationExtractor(edgeDirMat);
+		eox.computeEdgeOrientation();
+		edgeOrientation = eox.getEdgeOrientation();
+	}
+
 	public void calcHistogram() {
+		convertToGrey();
 		extractEdges();
+		extractFirstDerivative();
 		getEdgeLengths();
+		getEdgeOrientation();
 		
 		//commented for testing
 		//Imgproc.calcHist(histMatList, new MatOfInt(0), mask, histMat, new MatOfInt(nrOfBins), new MatOfFloat(0f, this.maxEdgeLength));
@@ -82,7 +109,7 @@ public class EdgeHistogram {
 		return this.histMat;
 	}
 	
-	public String evaluate(int minThreshold, int maxThreshold, int numOfBins, boolean print){
+	public String evaluatelength(int minThreshold, int maxThreshold, int numOfBins, boolean print){
 		int min = edgeLengths.getFirst();
 		int max = edgeLengths.getFirst();
 		int diff, rangePerBin;
@@ -121,4 +148,58 @@ public class EdgeHistogram {
 		result = sb.toString();
 		return result.substring(0, result.length() - 1);
 	}
+	
+	public String evaluateOrientation(int numOfBins, boolean print){
+		double maxDegree = 180.0;
+		double minAngle = edgeOrientation.getFirst();
+		double maxAngle = edgeOrientation.getFirst();
+		int rangePerBin;
+		int[] amounts = new int[numOfBins];
+		String result;
+		
+		rangePerBin = (int)((maxDegree) / numOfBins);
+		
+		for(double currAngle: edgeOrientation){
+			if(currAngle > maxAngle){
+				maxAngle = currAngle;
+			}else if(currAngle < minAngle){
+				minAngle = currAngle;
+			}
+			amounts[((int)Math.ceil((double)currAngle / numOfBins))] ++;
+		}
+		
+		StringBuilder sb = new StringBuilder();
+			
+		if(print){
+			System.out.println("minimum: " + minAngle);
+			System.out.println("maximum: " + maxAngle);
+			System.out.println("rangePerBin: " + rangePerBin);
+			System.out.println("bin values:");
+		}
+		for(int i = 0; i < amounts.length; i++){
+			sb.append(amounts[i] + ".0,");
+			if(print){
+				System.out.print(amounts[i] + " |");
+				System.out.println("range: " + i * rangePerBin + "-" + (i + 1) * rangePerBin);
+			}
+		}
+		result = sb.toString();
+		return result.substring(0, result.length() - 1);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

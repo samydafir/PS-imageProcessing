@@ -9,29 +9,29 @@ import org.opencv.core.Core;
 
 public class MainClass {
 
-	static int min = 100;
+	static int min = 5;
 	static int max = 1000;
-	static int histBins = 20;
+	static int histBinsLength = 20;
+	static int histBinsOrient = 20;
 	static boolean print = false;
-	static int lowThreshold = 60;
-	static int highThreshold = 20;
-	
+	static int lowThreshold = 10;
+	static int highThreshold = 30;
 
 	public static void main(String[] args) throws IOException {
 		
 		System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
 
 		//uncomment to enable preprocessing of source folder
-		PreprocessImage ppi = new PreprocessImage("rgb");
-		ppi.convert();
+		//PreprocessImage ppi = new PreprocessImage("hsl");
+		//ppi.convert();
 		
 		
 		//uncomment to create the file containing edge count and category of all images
-		//createHistFile("hsl");
+		createHistFile("enhanced_rgb");
 
 		//run tests using the created hist-file and images in the specified folder.
 		//also specify category
-		//runTests("test", "3");
+		//runTests("tests", "3");
 	}
 	
 	
@@ -41,7 +41,8 @@ public class MainClass {
 		String[] folders = new File(inputImagePath).list();
 		File currentFolder;
 		EdgeHistogram eh;
-		BufferedWriter output = new BufferedWriter(new FileWriter("histograms\\histograms_" + min + "-" + max + "_" + histBins + ".txt"));
+		BufferedWriter outputLength = new BufferedWriter(new FileWriter("histograms\\histograms_" + min + "-" + max + "_" + histBinsLength + "_" + "length" + ".txt"));
+		BufferedWriter outputOrient = new BufferedWriter(new FileWriter("histograms\\histograms_" + min + "-" + max + "_" + histBinsOrient + "_" + "orientation" + ".txt"));
 		int cat;
 		
 		cat = 1;
@@ -51,15 +52,20 @@ public class MainClass {
 				for(String currImage: new File(inputImagePath + "\\" + currFolder).list()){
 					eh = new EdgeHistogram(inputImagePath + "\\" + currFolder + "\\" + currImage, 10, 1000, lowThreshold, highThreshold);
 					eh.calcHistogram();
-					output.append((eh.evaluate(min, max, histBins, print)));
-					output.append("," + currFolder);
-					output.append("\n");
+					outputLength.append((eh.evaluatelength(min, max, histBinsLength, print)));
+					outputLength.append("," + currFolder);
+					outputLength.append("\n");
+					outputOrient.append((eh.evaluateOrientation(histBinsOrient, print)));
+					outputOrient.append("," + currFolder);
+					outputOrient.append("\n");
 				}
 				cat++;
 			}
 		}
-		output.flush();
-		output.close();
+		outputLength.flush();
+		outputLength.close();
+		outputOrient.flush();
+		outputOrient.close();
 	}
 
 	private static void runTests(String testFolder, String category) throws IOException{
@@ -70,13 +76,13 @@ public class MainClass {
 		int correctClass = 0;
 		EdgeHistogram eh;
 		String foundCategory = "";
-		KNearestNeighbour a = new KNearestNeighbour("histograms\\histograms_" + min + "-" + max + "_" + histBins + ".txt");
+		KNearestNeighbour a = new KNearestNeighbour("histograms\\histograms_" + min + "-" + max + "_" + histBinsLength + ".txt");
 		
 		for(String currTestImage: testImages){
 			//create feature vector for test image:
 			eh = new EdgeHistogram(testFolder + "\\" + currTestImage, 10, 1000, lowThreshold, highThreshold);
 			eh.calcHistogram();
-			histValues = eh.evaluate(min, max, histBins, print).split(",");
+			histValues = eh.evaluatelength(min, max, histBinsLength, print).split(",");
 			for(int i = 0; i < histValues.length; i++){
 				vector.add(Double.parseDouble(histValues[i]));
 			}
