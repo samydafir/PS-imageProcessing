@@ -18,16 +18,15 @@ public class EdgeDetection {
 		int thresh1 = 60;
 		int thresh2 = 100;
 		
-		canny("examples/edge/src1.jpg", "/home/sebastian/Documents/Uni/imgproc/dst1", thresh1, thresh1/3);
-		canny("examples/edge/src2.jpg", "/home/sebastian/Documents/Uni/imgproc/dst2", thresh2, thresh2/3);
-		canny("examples/edge/src3.jpg", "/home/sebastian/Documents/Uni/imgproc/dst3", thresh2, thresh2/3);
+
+		canny("examples/edge/src3.jpg", "dst/dst", thresh2, thresh2/3);
 		
 	}
 	
 	
 	public static void canny(String srcPath, String dstPath, int highThresh, int lowThresh) throws IOException {
 		
-		Mat src, sobX, sobY, edge, laplace, morphologyEx;
+		Mat src, sobX, sobY, edge, laplace, morphologyEx, ori, mag, angle;
 
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 				
@@ -35,16 +34,27 @@ public class EdgeDetection {
 		sobX = new Mat();
 		sobY = new Mat();
 		edge = new Mat();
+		ori = new Mat();
+		mag = new Mat();
+		angle = new Mat();
 		laplace = new Mat();
 		
 		src = Imgcodecs.imread(srcPath);
 		edge.create(src.size(), src.type());
-		
-		
 		Imgproc.cvtColor(src, src, Imgproc.COLOR_BGR2GRAY);
 		Imgproc.blur(src, src, new Size(3, 3));
 		Imgproc.Sobel(src, sobX, src.depth(), 1, 0);
 		Imgproc.Sobel(src, sobY, src.depth(), 0, 1);
+		Core.convertScaleAbs(sobX, sobX);
+		Core.convertScaleAbs(sobY, sobY);
+		Core.addWeighted( sobX, 0.5, sobY, 0.5, 0, ori);
+		for(int i = 0; i < ori.height(); i++){
+			for(int j = 0; j < ori.width(); j++){
+				System.out.print(ori.get(i, j)[0]);
+				System.out.println();
+			}
+		}
+		
 		Imgproc.Canny(src, edge, lowThresh, highThresh);	
 		Imgproc.Laplacian(src, laplace, src.depth(), 3, 1, 0);
 		
