@@ -3,18 +3,17 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.opencv.core.Core;
 
 public class MainClass {
 
-	static int min = 100;
+	static int min = 0;
 	static int max = 1000;
-	static int histBins = 20;
+	static int histBins = 50;
 	static boolean print = false;
-	static int lowThreshold = 60;
-	static int highThreshold = 20;
+	static int lowThreshold = 20;
+	static int highThreshold = 60;
 	
 
 	public static void main(String[] args) throws IOException {
@@ -22,16 +21,16 @@ public class MainClass {
 		System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
 
 		//uncomment to enable preprocessing of source folder
-		PreprocessImage ppi = new PreprocessImage("rgb");
-		ppi.convert();
+		//PreprocessImage ppi = new PreprocessImage("rgb");
+		//ppi.convert();
 		
 		
 		//uncomment to create the file containing edge count and category of all images
-		//createHistFile("hsl");
+		//createHistFile("enhanced_rgb");
 
 		//run tests using the created hist-file and images in the specified folder.
 		//also specify category
-		//runTests("test", "3");
+		runTests("test", "5");
 	}
 	
 	
@@ -42,20 +41,29 @@ public class MainClass {
 		File currentFolder;
 		EdgeHistogram eh;
 		BufferedWriter output = new BufferedWriter(new FileWriter("histograms\\histograms_" + min + "-" + max + "_" + histBins + ".txt"));
-		int cat;
 		
-		cat = 1;
 		for(String currFolder: folders){
 			currentFolder = new File(inputImagePath + "\\" + currFolder);
 			if(currentFolder.isDirectory()){
 				for(String currImage: new File(inputImagePath + "\\" + currFolder).list()){
-					eh = new EdgeHistogram(inputImagePath + "\\" + currFolder + "\\" + currImage, 10, 1000, lowThreshold, highThreshold);
+					eh = new EdgeHistogram(inputImagePath + "\\" + currFolder + "\\" + currImage, 10, 1000, highThreshold, lowThreshold);
 					eh.calcHistogram();
 					output.append((eh.evaluate(min, max, histBins, print)));
-					output.append("," + currFolder);
+					switch(currFolder){
+					case "2":
+						output.append("," + 1);
+						break;
+					case "4":
+						output.append("," + 3);
+						break;
+					case "6":
+						output.append("," + 5);
+						break;
+					default:
+						output.append("," + currFolder);
+					}
 					output.append("\n");
 				}
-				cat++;
 			}
 		}
 		output.flush();
@@ -74,7 +82,7 @@ public class MainClass {
 		
 		for(String currTestImage: testImages){
 			//create feature vector for test image:
-			eh = new EdgeHistogram(testFolder + "\\" + currTestImage, 10, 1000, lowThreshold, highThreshold);
+			eh = new EdgeHistogram(testFolder + "\\" + currTestImage, 10, 1000, highThreshold, lowThreshold);
 			eh.calcHistogram();
 			histValues = eh.evaluate(min, max, histBins, print).split(",");
 			for(int i = 0; i < histValues.length; i++){

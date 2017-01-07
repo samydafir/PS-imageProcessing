@@ -60,7 +60,7 @@ public class EdgeHistogram {
 		Imgproc.blur(cannyMat, cannyMat, new Size(3, 3));
 		Imgproc.Canny(cannyMat, cannyMat, lowThresh, highThresh);
 		histMatList.add(cannyMat);
-		
+		//Imgcodecs.imwrite("canny.jpg", cannyMat);
 		getEdgeLengths();
 	}
 	
