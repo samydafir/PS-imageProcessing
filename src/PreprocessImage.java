@@ -16,9 +16,11 @@ public class PreprocessImage {
 	
 	private int count;
 	private String inputImagePath;
+	private Mat image;
 	
 	public PreprocessImage(String inputImagePath){
 		this.inputImagePath = inputImagePath;
+		image = Imgcodecs.imread(inputImagePath);
 		count = 0;
 	}
 	

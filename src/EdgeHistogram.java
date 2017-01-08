@@ -72,6 +72,7 @@ public class EdgeHistogram {
 		Imgproc.blur(greyMat, cannyMat, new Size(3, 3));
 		Imgproc.Canny(cannyMat, cannyMat, lowThresh, highThresh);
 		histMatList.add(cannyMat);
+		Imgcodecs.imwrite("test.png", cannyMat);
 	}
 
 	private void extractFirstDerivative(){
@@ -141,7 +142,7 @@ public class EdgeHistogram {
 		for(int i = 0; i < amounts.length; i++){
 			sb.append(amounts[i] + ".0,");
 			if(print){
-				System.out.print(amounts[i] + " |");
+				System.out.print(amounts[i] + ",");
 				System.out.println("range: " + (minThreshold + i * rangePerBin) + "-" + (minThreshold + (i + 1) * rangePerBin));
 			}
 		}
@@ -186,20 +187,4 @@ public class EdgeHistogram {
 		result = sb.toString();
 		return result.substring(0, result.length() - 1);
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

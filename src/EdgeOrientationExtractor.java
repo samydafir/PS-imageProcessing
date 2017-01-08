@@ -1,4 +1,3 @@
-import java.util.HashSet;
 import java.util.LinkedList;
 import org.opencv.core.Mat;
 

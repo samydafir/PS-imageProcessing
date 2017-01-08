@@ -35,7 +35,12 @@ public class KNearestNeighbour {
 		HashMap<String, Integer> catStore = new HashMap<>();
 		FeatureVector currMax = null;
 		
-		for(FeatureVector currVec: neighbours){			
+		//get nearest neighbours
+		for(FeatureVector currVec: neighbours){	
+			if(currVec.equals(sample)){
+				continue;
+			}
+			
 			if(results.size() < k){
 				results.add(currVec);
 			}else{
@@ -52,6 +57,7 @@ public class KNearestNeighbour {
 			}
 		}
 		
+		//get count for each category
 		String currCat;
 		for(FeatureVector FVec: results){
 			currCat = FVec.getCategory();
@@ -62,6 +68,7 @@ public class KNearestNeighbour {
 			}
 		}
 		
+		//extract max
 		int max = 0;
 		String resultCat = "no result";
 		for(Map.Entry<String, Integer> currRes: catStore.entrySet()){
