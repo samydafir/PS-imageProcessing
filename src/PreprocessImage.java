@@ -20,13 +20,12 @@ public class PreprocessImage {
 	
 	public PreprocessImage(String inputImagePath){
 		this.inputImagePath = inputImagePath;
-		image = Imgcodecs.imread(inputImagePath);
 		count = 0;
 	}
 	
-	public void convert() throws IOException{
+	public void convert(String[] colorModes) throws IOException{
 	
-		String[] colorModes = {/*"lab", "yuv", "hsl", "hsv", */"enhanced_rgb"};
+		
 		String[] folders = new File(inputImagePath).list();
 		File currentFolder;
 		File outputFolder;
@@ -41,9 +40,11 @@ public class PreprocessImage {
 					}
 					count = 0;
 					for(String currImage: new File(inputImagePath + "\\" + currFolder).list()){
-						normalize(inputImagePath + "\\" + currFolder + "\\" + currImage);
-						clahe("output\\normalized.jpg");
-						colorSpaceConvert("output\\clahe.jpg", currMode,  outputFolder +  "\\" + count + ".jpg");
+						image = Imgcodecs.imread(inputImagePath + "\\" + currFolder + "\\" + currImage);
+						normalize();
+						clahe();
+						colorSpaceConvert(currMode);
+						Imgcodecs.imwrite(outputFolder +  "\\" + count + ".jpg", image);
 						count++;
 					}
 				}
@@ -54,7 +55,7 @@ public class PreprocessImage {
 
 
 
-   private Mat colorSpaceConvert(String path, String colorMode, String output) throws IOException{
+   private void colorSpaceConvert(String colorMode) throws IOException{
 	   
 	   int colorSpace;
 	   
@@ -71,55 +72,38 @@ public class PreprocessImage {
 	   case "lab":
 		   colorSpace = Imgproc.COLOR_RGB2Lab;
 		   break;
-	   case "rgb":
-		   colorSpace = Imgproc.COLOR_Lab2RGB;
-		   break;
 	   default:
 		   colorSpace = 0;
 	   }
 	   
-	   Mat src = Imgcodecs.imread(path);
 
 	   if(colorSpace != 0){
-		   Imgproc.cvtColor(src, src, colorSpace);
+		   Imgproc.cvtColor(image, image, colorSpace);
 	   }
        
-	   Imgcodecs.imwrite(output, src);
-		 
-	   return src;
    }
    
    
-   private Mat clahe(String path) throws IOException{
+   private void clahe() throws IOException{
 	          
-	   Mat src = Imgcodecs.imread(path);
 
 	   for(int i = 0; i < 3; i++){
 		   Mat channel = new Mat();
-		   Core.extractChannel(src, channel, i);;
+		   Core.extractChannel(image, channel, i);;
        
 		   CLAHE clahe = Imgproc.createCLAHE();
 		   clahe.setClipLimit(1);
 		   clahe.setTilesGridSize(new Size(4,4));
 		   clahe.apply(channel, channel);
 		   
-		   Core.insertChannel(channel, src, i);
-	   }
-		   
-       Imgcodecs.imwrite("output\\clahe.jpg", src);
-       
-       return src;
+		   Core.insertChannel(channel, image, i);
+	   }       
    }
    
    
    
-   private void normalize(String path) throws IOException{
+   private void normalize() throws IOException{
 
-	   Mat src = Imgcodecs.imread(path);
-       Core.normalize(src, src, 255, 0, Core.NORM_MINMAX);
-       
-	  
-       Imgcodecs.imwrite("output\\normalized.jpg", src);
-       
+       Core.normalize(image, image, 255, 0, Core.NORM_MINMAX);       
    }       
 }

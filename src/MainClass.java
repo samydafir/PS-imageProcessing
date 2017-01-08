@@ -25,18 +25,19 @@ public class MainClass {
 		switch (selection){
 			case 1:
 				//preprocessing of source folder
-				PreprocessImage ppi = new PreprocessImage("hsl");
-				ppi.convert();
+				String[] colorModes = {/*"lab", "yuv", "hsl", "hsv", */"double_enhanced__rgb"};
+				PreprocessImage ppi = new PreprocessImage("images/");
+				ppi.convert(colorModes);
 				break;
 			case 2:
 				//create the file containing edge and orientation count and category of all images
-				createHistFile("enhanced_rgb");
+				createHistFile("double_enhanced_rgb");
 				break;
 			case 3:
 				
 				//run tests using the created hist-file and images in the specified folder.
 				//also specify category
-				runTests("test", "1");
+				runTests("test", "2");
 		}
 	}
 
