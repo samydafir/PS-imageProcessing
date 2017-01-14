@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfFloat;
-import org.opencv.core.MatOfInt;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
@@ -17,51 +15,38 @@ import org.opencv.imgproc.Imgproc;
 
 public class EdgeHistogram {
 
-	private String srcPath;
-
-
 	private Mat srcMat;		// source Mat
 	private Mat cannyMat;	// Mat that contains the edge detected image
 	private Mat sobelMatX;	// Mat that contains first derivation in x of image
 	private Mat sobelMatY;	// Mat that contains first derivation in y of image
 	private Mat greyMat; 	// Mat containing grey image of src image
-	private Mat lengthMat;	// Mat that contains the lengths of the edges
 	private Mat edgeDirMat;	// Mat that contains the orientation of the edges
 	private Mat histMat;	// final Mat that contains the histogram
-	private Mat mask;		// mask can be used for histogram calculation, if we don't want to take a histogram of the full pic
 
 	private int highThresh;	// high threshold for canny edge detection
 	private int lowThresh;	// low threshhold
-
-	private final int nrOfBins;			// Number of Bins used for the histogram
-	private final float maxEdgeLength;	// Max value that should be considered in the histogram
 
 	private List<Mat> histMatList;
 	private LinkedList<Integer> edgeLengths; //List containing lengths of all found edges
 	private LinkedList<Double> edgeOrientation; //List containing orientation
 
 
-	public EdgeHistogram(String srcPath, int nrOfBins, int maxEdgeLength, int highThresh, int lowThresh) {
+	public EdgeHistogram(String srcPath, int maxEdgeLength, int highThresh, int lowThresh) {
 
-		this.nrOfBins = nrOfBins;
 		this.highThresh = highThresh;
 		this.lowThresh = lowThresh;
-		this.maxEdgeLength = maxEdgeLength;
 
-		this.srcPath = srcPath;
 		this.srcMat = new Mat();
 		this.cannyMat = new Mat();
 		this.sobelMatX  = new Mat();
 		this.sobelMatY = new Mat();
 		this.greyMat = new Mat();
-		this.lengthMat = new Mat();
 		this.edgeDirMat = new Mat();
-		this.mask = new Mat();
 
 		this.srcMat = Imgcodecs.imread(srcPath);
 		cannyMat.create(srcMat.size(), srcMat.type());
 
-		histMatList = new ArrayList<Mat>();
+		histMatList = new ArrayList<>();
 	}
 
 	private void convertToGrey(){
@@ -72,7 +57,6 @@ public class EdgeHistogram {
 		Imgproc.blur(greyMat, cannyMat, new Size(3, 3));
 		Imgproc.Canny(cannyMat, cannyMat, lowThresh, highThresh);
 		histMatList.add(cannyMat);
-		Imgcodecs.imwrite("test.png", cannyMat);
 	}
 
 	private void extractFirstDerivative(){
@@ -101,9 +85,6 @@ public class EdgeHistogram {
 		extractFirstDerivative();
 		getEdgeLengths();
 		getEdgeOrientation();
-
-		//commented for testing
-		//Imgproc.calcHist(histMatList, new MatOfInt(0), mask, histMat, new MatOfInt(nrOfBins), new MatOfFloat(0f, this.maxEdgeLength));
 	}
 
 	public Mat getHistogram() {
@@ -178,7 +159,7 @@ public class EdgeHistogram {
 			System.out.println("bin values:");
 		}
 		for(int i = 0; i < amounts.length; i++){
-			sb.append(amounts[i] + ".0,");
+			sb.append((int)(((double)amounts[i])/100) + ".0,");
 			if(print){
 				System.out.print(amounts[i] + " |");
 				System.out.println("range: " + i * rangePerBin + "-" + (i + 1) * rangePerBin);

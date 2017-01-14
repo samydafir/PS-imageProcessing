@@ -37,7 +37,7 @@ public class MainClass {
 				
 				//run tests using the created hist-file and images in the specified folder.
 				//also specify category
-				runTests("test", "2");
+				runTests("test", "3");
 		}
 	}
 
@@ -54,7 +54,7 @@ public class MainClass {
 			currentFolder = new File(inputImagePath + "\\" + currFolder);
 			if(currentFolder.isDirectory()){
 				for(String currImage: new File(inputImagePath + "\\" + currFolder).list()){
-					eh = new EdgeHistogram(inputImagePath + "\\" + currFolder + "\\" + currImage, 10, 1000, highThreshold, lowThreshold);
+					eh = new EdgeHistogram(inputImagePath + "\\" + currFolder + "\\" + currImage, 1000, highThreshold, lowThreshold);
 					eh.calcHistogram();
 					output.append((eh.evaluatelength(min, max, histBinsLength, print)));
 					output.append(",");
@@ -81,7 +81,7 @@ public class MainClass {
 
 		for(String currTestImage: testImages){
 			//create feature vector for test image:
-			eh = new EdgeHistogram(testFolder + "\\" + currTestImage, 10, 1000, highThreshold, lowThreshold);
+			eh = new EdgeHistogram(testFolder + "\\" + currTestImage, 1000, highThreshold, lowThreshold);
 			eh.calcHistogram();
 			tempHistValues = eh.evaluatelength(min, max, histBinsLength, print).split(",");
 			for(int i = 0; i < tempHistValues.length; i++){
