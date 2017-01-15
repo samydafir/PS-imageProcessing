@@ -7,17 +7,20 @@
 \usepackage{times}
 \usepackage[T1]{fontenc}
 \usepackage{subfigure}
+\usepackage{moreverb}
 
-\title{Imageprocessing - Edge Histograms}
+\title{Classifying Colon Cancer Colonoscopy Images Using Edge Histograms}
 \author{}
 \date{}
 
 \begin{document}
+	\maketitle
 
 \begin{frame}
-	\frametitle{Inhalt}
+	\frametitle{Content}
 	\begin{enumerate}
 		\item Edge Detection
+		\item Implementation
 	\end{enumerate}
 \end{frame}
 
@@ -85,6 +88,216 @@
 			\item Hysteresis
 		\end{enumerate}
 	\end{block}
+\end{frame}
+
+
+\section{Implementation}
+
+\begin{frame}
+	\frametitle{Overview}
+	\begin{itemize}
+		\item Development and Frameworks
+		\item Image Enhancement
+		\item Edge Detection
+		\item Edge Lengths
+		\item Edge Orientation
+		\item Histograms
+		\item Image Classification
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Development and Frameworks}
+	Developed using:
+	\begin{itemize}
+		\item Java 8
+		\item OpenCV for Java
+		\item Eclipse Neon
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Image Enhancement and Conversion}
+	\begin{block}{}
+		\begin{itemize}
+			\item Color Space Conversion
+			\item Normalization
+			\item CLAHE
+			\item All part of OpenCV
+		\end{itemize}
+	\end{block}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Image Enhancement and Conversion}
+	\includegraphics[width = 4.6cm]{before.jpg}
+	\raisebox{0.9\height}{\includegraphics[width = 1.5cm]{arrow_right.png}}
+	\includegraphics[width = 4.6cm]{after.jpg}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Image Enhancement and Conversion}
+	\includegraphics[width = 4cm]{before_1.png}
+	\raisebox{0.75\height}{\includegraphics[width = 1.5cm]{arrow_right.png}}
+	\includegraphics[width = 4cm]{after_1.jpg}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Image Enhancement and Conversion}
+	\textbf{RGB to HSV}
+	\\
+	\includegraphics[width = 4cm]{before_3.png}
+	\raisebox{0.75\height}{\includegraphics[width = 1.5cm]{arrow_right.png}}
+	\includegraphics[width = 4cm]{after_3.jpg}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Edge Detection}
+	\begin{block}{}
+		\begin{itemize}
+			\item Grayscale Conversion
+			\item Canny Edge Detector
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Edge Detection}
+	\includegraphics[width = 4cm]{after_1.jpg}
+	\raisebox{0.75\height}{\includegraphics[width = 1.5cm]{arrow_right.png}}
+	\includegraphics[width = 4cm]{edges_detected.png}		
+\end{frame}
+
+\begin{frame}
+	\frametitle{Edge Histograms}
+	\begin{block}{Definition}
+		\begin{itemize}
+			\item Characteristics of an image e.g. edge lengths
+			\item Partition characteristic attributes into bins
+			\item In our case: Edge lengths \& orientations
+			\item Length: Image has\\
+			5 edges of length 0 - 20 pixels\\
+			20 edges of length 100 - 120 pixels
+		\end{itemize}
+	\end{block}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Edge Histograms}
+	Simple Example:\\
+	10.0, 20.0, 23.0, 30.0, 28.0, 18.0, 1\\
+	\includegraphics[width = 8cm]{histogram.png}	
+	
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Edge Histograms}
+	\begin{itemize}
+		\item Histogram data for each example image collected in a hist-file.
+		\item Specify Category. Here: Cancer stage
+		\item Example:\\
+		\begin{verbatimtab}[1]
+			210.0,3.0,170.0,142.0,126.0,93.0,32.0,16.0,1
+			192.0,2.0,181.0,139.0,119.0,87.0,32.0,17.0,1
+			143.0,1.0,172.0,147.0,128.0,91.0,30.0,16.0,1
+		\end{verbatimtab}
+		
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Edge Lengths}
+	\begin{block}{Prequisites}
+		\begin{itemize}
+			\item Image with detected Edges
+			\item Edges white
+			\item Rest black
+			\item Not entirely given $\rightarrow$ Threshold set at grayscale 200
+		\end{itemize}
+	\end{block}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Edge Lengths}
+	\begin{block}{Algorithm}
+		Iterate over all pixels
+		\begin{enumerate}
+			\item Check if pixel is white $\rightarrow$ new edge found
+			\item Check immediate neighbours: if white $\rightarrow$ add pixel to edge
+			\item Follow white path until no more connected white pixels
+			\item Add all passes pixels to Collection of used pixels
+			\item Add one to category with detected length
+			\item Continue iterating and start at 1
+			
+		\end{enumerate}
+	\end{block}
+\end{frame}
+
+
+\begin{frame}[fragile]
+	\frametitle{Edge Lengths}
+	\begin{block}{Algorithm}
+		\begin{verbatimtab}[4]
+			function measureEdge(pixel) {
+				length = 1
+				for each surrounding pixel p:
+				if p == white
+				length += measureEdge(p)
+				
+				return length
+			}
+		\end{verbatimtab}
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Edge Orientation}
+	\begin{itemize}
+		\item Requires edge detected image
+		\item Use sobel operator to detect edges
+		\item Extract edge orientations from image (OpenCV)
+		\item Partition edges into bins
+		\item Bin content: pixels part of edge with certain orientation
+		\item Category: range of angles
+	\end{itemize}
+	
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Image Classification}
+	\begin{enumerate}
+		\item Classify all example images $\rightarrow$ create file with histograms
+		\item Create List of Feature Vectors
+		\item Enhance image to classify
+		\item Create Feature Vector
+		\item KNN: Compare new vector all vectors in list\\
+		$\rightarrow$ euclidean distance\\
+		\item Select K vectors with smallest distance
+		\item Classification: category found most often
+	\end{enumerate}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Optimization of parameters}
+	Difference between a perfectly working and \\barely functional program 
+	\begin{itemize}
+		\item Selection of input images
+		\item Thresholds for edge detection
+		\item Edge Lengths: number of bins, range of lengths in bins
+		\item Weights of features:  all equally significant
+		\\Lengths: per edge
+		\\Orientation: per pixel
+		
+	\end{itemize}
+	
 \end{frame}
 
 \end{document}
