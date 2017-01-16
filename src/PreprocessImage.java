@@ -32,6 +32,7 @@ public class PreprocessImage {
 		for(String currFolder: folders){
 			currentFolder = new File(inputImagePath + "\\" + currFolder);
 			if(currentFolder.isDirectory()){
+				count++;
 				for(String currMode: colorModes){
 					outputFolder = new File(currMode + "\\" + count);
 					if(!outputFolder.exists()){
@@ -46,7 +47,6 @@ public class PreprocessImage {
 					}
 				}
 			}
-		count++;
 		}
 	}
 

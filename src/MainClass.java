@@ -29,8 +29,8 @@ public class MainClass {
 		switch (selection){
 			case 1:
 				//preprocessing of source folder
-				String[] colorModes = {/*"lab", "yuv", "hsl", "hsv", */"hsv"};
-				PreprocessImage ppi = new PreprocessImage("images/");
+				String[] colorModes = {/*"lab", "yuv", "hsl", "hsv", */"double_enhanced_rgb"};
+				PreprocessImage ppi = new PreprocessImage("enhanced_rgb/");
 				ppi.convert(colorModes);
 				break;
 			case 2:
@@ -42,17 +42,16 @@ public class MainClass {
 				//run tests using the created hist-file and images in the specified folder.
 				//also specify category
 				double[] result;
-//				double totalImages = 0;
-//				double totalPercent = 0;
-//				for(int i = 1; i <= 6; i++){
-//					result = runTests(testPath + "/" + i, writeCategory(i));
-//					System.out.println("_________");
-//					totalImages += result[0];
-//					totalPercent += (result[1] * result[0]);
-//				}
-//				System.out.println(totalPercent/totalImages);
-				result = runTests("test", 3);
-				System.out.println(result[1]);
+				double totalImages = 0;
+				double totalPercent = 0;
+				for(int i = 1; i <= 6; i++){
+					result = runTests(testPath + "/" + i, writeCategory(i));
+					System.out.println("_________");
+					totalImages += result[0];
+					totalPercent += (result[1] * result[0]);
+					System.out.println(result[1]);
+				}
+				System.out.println(totalPercent/totalImages);
 				
 		}
 	}
@@ -97,7 +96,6 @@ public class MainClass {
 	}
 
 	private static double[] runTests(String testFolder, int category) throws IOException{
-
 		BufferedReader reader = new BufferedReader(new FileReader(new File("images/patientmapping.csv")));
 		HashMap<String, Integer> imageToPatient = new HashMap<>();
 		String currFile = reader.readLine();
@@ -105,6 +103,7 @@ public class MainClass {
 		while (currFile != null){
 			String[] line = currFile.split(";");
 			imageToPatient.put(line[0], Integer.parseInt(line[1]));
+			currFile = reader.readLine();
 		}
 		reader.close();
 		
@@ -130,31 +129,31 @@ public class MainClass {
 			for(int i = 0; i < tempHistValues.length; i++){
 				vector.add(Double.parseDouble(tempHistValues[i]));
 			}
-
+			
 			//execute KNN:
 			foundCategory = a.getKnnCategory(new FeatureVector(vector,category,imageToPatient.get(currTestImage)),k);
 			if(foundCategory == category){
 				correctClass++;
 			}
-			System.out.println("Class: " + foundCategory);
+			//System.out.println("Class: " + foundCategory);
 		}
 		return new double[] {testImages.length, (double)correctClass / (double)testImages.length * 100};
 	}
 
 	
-	private static String writeCategory(int cat){
+	private static int writeCategory(int cat){
 		switch(cat){
 		case 1:
 		case 2:
-			return "1";
+			return 1;
 		case 3:
 		case 4:
-			return "2";
+			return 2;
 		case 5:
 		case 6:
-			return "3";
+			return 3;
 		default:
-			return "error: Invalid Category";
+			return -1;
 		}
 	}
 	

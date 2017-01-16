@@ -67,7 +67,7 @@ public class KNearestNeighbour {
 				catStore.put(FVec.getCategory(), 1);
 			}
 		}
-		System.out.println(catStore.size());
+		
 		//extract max
 		int max = 0;
 		int resultCat = -1;
