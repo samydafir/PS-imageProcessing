@@ -222,9 +222,9 @@
 		\item Specify Category. Here: Cancer stage
 		\item Example:\\
 		\begin{verbatimtab}[1]
-			210.0,3.0,170.0,142.0,126.0,93.0,32.0,16.0,1
-			192.0,2.0,181.0,139.0,119.0,87.0,32.0,17.0,1
-			143.0,1.0,172.0,147.0,128.0,91.0,30.0,16.0,1
+210.0,3.0,170.0,142.0,126.0,93.0,32.0,16.0,1
+192.0,2.0,181.0,139.0,119.0,87.0,32.0,17.0,1
+143.0,1.0,172.0,147.0,128.0,91.0,30.0,16.0,1
 		\end{verbatimtab}
 		
 	\end{itemize}
@@ -265,14 +265,14 @@
 	\frametitle{Edge Lengths}
 	\begin{block}{Algorithm}
 		\begin{verbatimtab}[4]
-			function measureEdge(pixel) {
-				length = 1
-				for each surrounding pixel p:
-				if p == white
-				length += measureEdge(p)
-				
-				return length
-			}
+function measureEdge(pixel) {
+	length = 1
+	for each surrounding pixel p:
+		if p == white
+			length += measureEdge(p)
+	
+	return length
+}
 		\end{verbatimtab}
 	\end{block}
 \end{frame}
@@ -307,8 +307,10 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{Optimization of parameters}
+	\frametitle{Paramter Optimization}
+	\begin{block}{}
 	Difference between a perfectly working and \\barely functional program 
+	\end{block}
 	\begin{itemize}
 		\item Selection of input images
 		\item Thresholds for edge detection
@@ -326,7 +328,7 @@
 	\frametitle{Problems}
     \begin{block}{Encountered Problems}
 	    \begin{itemize}
-		    \item  
+		    \item Fine tuning of parameters
 	    \end{itemize}
     \end{block}
 \end{frame}
@@ -335,6 +337,11 @@
 \begin{frame}
 	\frametitle{Results}
     \begin{block}{Colormodels compared}
+    	\begin{itemize}
+    		\item enhanced RGB
+    		\item HSV
+    		\item Twice enhanced RGB
+    	\end{itemize}
     \end{block}
 \end{frame}
 
