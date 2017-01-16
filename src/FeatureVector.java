@@ -3,15 +3,17 @@ import java.util.ArrayList;
 public class FeatureVector {
 	
 	private ArrayList<Double> vector = new ArrayList<>();
-	private String category;
+	private int category;
+	private int patient;
 	
 	
-	public FeatureVector(ArrayList<Double> features, String category){
+	public FeatureVector(ArrayList<Double> features, int category, int patient){
 		this.vector = features;
 		this.category = category;
+		this.patient = patient;
 	}
 	
-	
+
 	/**
 	 * computes euklidean difference between two vectors
 	 */
@@ -30,16 +32,25 @@ public class FeatureVector {
 		return this.vector;
 	}
 	
-	public String getCategory(){
+	public int getCategory(){
 		return this.category;
 	}
 	
-	public boolean equals(FeatureVector other){
-		if(other.getVector().equals(this.vector) && other.getCategory().equals(this.category)){
-			return true;
-		}
-		return false;
-		
+	public int getPatient() {
+		return patient;
 	}
+
+
+	public void setPatient(int patient) {
+		this.patient = patient;
+	}
+
+//	public boolean equals(FeatureVector other){
+//		if(other.getVector().equals(this.vector) && other.getCategory().equals(this.category)){
+//			return true;
+//		}
+//		return false;
+//		
+//	}
 	
 }

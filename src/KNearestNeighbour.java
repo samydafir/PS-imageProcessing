@@ -20,24 +20,24 @@ public class KNearestNeighbour {
 		while(currLine != null){
 			histValues = currLine.split(",");
 			vector = new ArrayList<>();
-			for(int i = 0; i < histValues.length - 1; i++){
+			for(int i = 0; i < histValues.length - 2; i++){
 				vector.add(Double.parseDouble(histValues[i]));
 			}
-			neighbours.add(new FeatureVector(vector, histValues[histValues.length - 1]));
+			neighbours.add(new FeatureVector(vector, Integer.parseInt(histValues[histValues.length - 2]), Integer.parseInt(histValues[histValues.length - 1])));
 			currLine = input.readLine();
 		}
 		input.close();
 	}
 	
-	public String getKnnCategory(FeatureVector sample, int k){
+	public int getKnnCategory(FeatureVector sample, int k){
 		
 		LinkedList<FeatureVector> results = new LinkedList<>();
-		HashMap<String, Integer> catStore = new HashMap<>();
+		HashMap<Integer, Integer> catStore = new HashMap<>();
 		FeatureVector currMax = null;
 		
 		//get nearest neighbours
 		for(FeatureVector currVec: neighbours){	
-			if(currVec.equals(sample)){
+			if(currVec.getPatient() == sample.getPatient()){
 				continue;
 			}
 			
@@ -58,7 +58,7 @@ public class KNearestNeighbour {
 		}
 		
 		//get count for each category
-		String currCat;
+		int currCat;
 		for(FeatureVector FVec: results){
 			currCat = FVec.getCategory();
 			if(catStore.containsKey(currCat)){
@@ -67,11 +67,11 @@ public class KNearestNeighbour {
 				catStore.put(FVec.getCategory(), 1);
 			}
 		}
-		
+		System.out.println(catStore.size());
 		//extract max
 		int max = 0;
-		String resultCat = "no result";
-		for(Map.Entry<String, Integer> currRes: catStore.entrySet()){
+		int resultCat = -1;
+		for(Map.Entry<Integer, Integer> currRes: catStore.entrySet()){
 			if(currRes.getValue() > max){
 				max = currRes.getValue();
 				resultCat = currRes.getKey();

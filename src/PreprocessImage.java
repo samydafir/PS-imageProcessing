@@ -14,13 +14,11 @@ import org.opencv.imgproc.Imgproc;
  */
 public class PreprocessImage {
 	
-	private int count;
 	private String inputImagePath;
 	private Mat image;
 	
 	public PreprocessImage(String inputImagePath){
 		this.inputImagePath = inputImagePath;
-		count = 0;
 	}
 	
 	public void convert(String[] colorModes) throws IOException{
@@ -29,26 +27,26 @@ public class PreprocessImage {
 		String[] folders = new File(inputImagePath).list();
 		File currentFolder;
 		File outputFolder;
+		int count = 0;
 		
 		for(String currFolder: folders){
 			currentFolder = new File(inputImagePath + "\\" + currFolder);
 			if(currentFolder.isDirectory()){
 				for(String currMode: colorModes){
-					outputFolder = new File(currMode + "\\" + currFolder);
+					outputFolder = new File(currMode + "\\" + count);
 					if(!outputFolder.exists()){
 						outputFolder.mkdirs();
 					}
-					count = 0;
 					for(String currImage: new File(inputImagePath + "\\" + currFolder).list()){
 						image = Imgcodecs.imread(inputImagePath + "\\" + currFolder + "\\" + currImage);
 						normalize();
 						clahe();
 						colorSpaceConvert(currMode);
-						Imgcodecs.imwrite(outputFolder +  "\\" + count + ".jpg", image);
-						count++;
+						Imgcodecs.imwrite(outputFolder +  "\\" + currImage, image);
 					}
 				}
 			}
+		count++;
 		}
 	}
 
