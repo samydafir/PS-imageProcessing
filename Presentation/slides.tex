@@ -152,6 +152,24 @@
 	
 \end{frame}
 
+\begin{frame}[fragile]
+	\frametitle{Image Enhancement and Conversion}
+	Normalization:
+	\begin{verbatimtab}
+Core.normalize(matrix,matrix,255,0,
+ Core.NORM_MINMAX);
+	\end{verbatimtab}
+	
+	CLAHE: 
+	\begin{verbatimtab}
+Mat channel = new Mat();
+Core.extractChannel(matrix, channel, i);
+CLAHE clahe = Imgproc.createCLAHE();
+clahe.apply(channel, channel);
+Core.insertChannel(channel, matrix, i);
+	\end{verbatimtab}
+\end{frame}
+
 \begin{frame}
 	\frametitle{Image Enhancement and Conversion}
 	\includegraphics[width = 4.6cm]{before.jpg}
@@ -166,13 +184,17 @@
 	\includegraphics[width = 4cm]{after_1.jpg}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
 	\frametitle{Image Enhancement and Conversion}
 	\textbf{RGB to HSV}
 	\\
 	\includegraphics[width = 4cm]{before_3.png}
 	\raisebox{0.75\height}{\includegraphics[width = 1.5cm]{arrow_right.png}}
 	\includegraphics[width = 4cm]{after_3.jpg}
+	\begin{verbatimtab}
+Imgproc.cvtColor(matrix, matrix, colorSpace)
+colorSpace: e.g. Imgproc.COLOR_RGB2HSV
+	\end{verbatimtab}
 \end{frame}
 
 \begin{frame}
@@ -185,11 +207,15 @@
 	\end{block}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
 	\frametitle{Edge Detection}
 	\includegraphics[width = 4cm]{after_1.jpg}
 	\raisebox{0.75\height}{\includegraphics[width = 1.5cm]{arrow_right.png}}
 	\includegraphics[width = 4cm]{edges_detected.png}		
+	\begin{verbatimtab}
+Imgproc.Canny(matrix, matrix, 
+ lowThresh, highThresh);
+	\end{verbatimtab}
 \end{frame}
 
 \begin{frame}
@@ -309,7 +335,7 @@ function measureEdge(pixel) {
 \begin{frame}
 	\frametitle{Paramter Optimization}
 	\begin{block}{}
-	Difference between a perfectly working and \\barely functional program 
+	Difference between a good and \\barely functional program 
 	\end{block}
 	\begin{itemize}
 		\item Selection of input images
