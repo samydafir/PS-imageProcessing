@@ -131,9 +131,9 @@
 		\item Development and Frameworks
 		\item Image Enhancement
 		\item Edge Detection
+		\item Histograms
 		\item Edge Lengths
 		\item Edge Orientation
-		\item Histograms
 		\item Image Classification
 	\end{itemize}
 \end{frame}
@@ -161,6 +161,19 @@
 		\end{itemize}
 	\end{block}
 	
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Image Enhancement and Conversion}
+	\textbf{RGB to HSV}
+	\\
+	\includegraphics[width = 4cm]{before_3.png}
+	\raisebox{0.75\height}{\includegraphics[width = 1.5cm]{arrow_right.png}}
+	\includegraphics[width = 4cm]{after_3.jpg}
+	\begin{verbatimtab}
+Imgproc.cvtColor(matrix, matrix, colorSpace)
+colorSpace: e.g. Imgproc.COLOR_RGB2HSV
+	\end{verbatimtab}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -193,19 +206,6 @@ Core.insertChannel(channel, matrix, i);
 	\includegraphics[width = 4cm]{before_1.png}
 	\raisebox{0.75\height}{\includegraphics[width = 1.5cm]{arrow_right.png}}
 	\includegraphics[width = 4cm]{after_1.jpg}
-\end{frame}
-
-\begin{frame}[fragile]
-	\frametitle{Image Enhancement and Conversion}
-	\textbf{RGB to HSV}
-	\\
-	\includegraphics[width = 4cm]{before_3.png}
-	\raisebox{0.75\height}{\includegraphics[width = 1.5cm]{arrow_right.png}}
-	\includegraphics[width = 4cm]{after_3.jpg}
-	\begin{verbatimtab}
-Imgproc.cvtColor(matrix, matrix, colorSpace)
-colorSpace: e.g. Imgproc.COLOR_RGB2HSV
-	\end{verbatimtab}
 \end{frame}
 
 \begin{frame}
