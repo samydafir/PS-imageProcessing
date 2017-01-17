@@ -13,14 +13,15 @@ public class MainClass {
 
 	static String testPath = "hsv";
 	static int min = 5;
-	static int max = 1000;
-	static int histBinsLength = 20;
+	static int max = 800;
+	static int histBinsLength = 50;
 	static int histBinsOrient = 20;
 	static boolean print = false;
 	static int lowThreshold = 33;
 	static int highThreshold = 100;
-	static int selection = 2;
+	static int selection = 3;
 	static int k = 5;
+	static boolean evalOrientation = true;
 
 	public static void main(String[] args) throws IOException {
 
@@ -46,12 +47,11 @@ public class MainClass {
 				double totalPercent = 0;
 				for(int i = 1; i <= 6; i++){
 					result = runTests(testPath + "/" + i, writeCategory(i));
-					System.out.println("_________");
 					totalImages += result[0];
 					totalPercent += (result[1] * result[0]);
-					System.out.println(result[1]);
+					System.out.println("Folder" + i + ": " +result[1]);
 				}
-				System.out.println(totalPercent/totalImages);
+				System.out.println("Total: " + totalPercent/totalImages);
 				
 		}
 	}
@@ -82,8 +82,10 @@ public class MainClass {
 					eh = new EdgeHistogram(inputImagePath + "\\" + currFolder + "\\" + currImage, 1000, highThreshold, lowThreshold);
 					eh.calcHistogram();
 					output.append((eh.evaluatelength(min, max, histBinsLength, print)));
-					output.append(",");
-					output.append((eh.evaluateOrientation(histBinsOrient, print)));
+					if(evalOrientation){
+						output.append(",");
+						output.append((eh.evaluateOrientation(histBinsOrient, print)));
+					}
 					output.append("," + writeCategory(Integer.parseInt(currFolder)));
 					output.append(",");
 					output.append(imageToPatient.get(currImage) + "");

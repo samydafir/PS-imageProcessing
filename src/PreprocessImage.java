@@ -87,7 +87,7 @@ public class PreprocessImage {
 
 	   for(int i = 0; i < 3; i++){
 		   Mat channel = new Mat();
-		   Core.extractChannel(image, channel, i);;
+		   Core.extractChannel(image, channel, i);
        
 		   CLAHE clahe = Imgproc.createCLAHE();
 		   clahe.setClipLimit(1);

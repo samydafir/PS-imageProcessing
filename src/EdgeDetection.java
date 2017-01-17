@@ -1,11 +1,6 @@
 import java.io.IOException;
-import java.util.Random;
-
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfFloat;
-import org.opencv.core.Point;
-import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
@@ -15,7 +10,6 @@ public class EdgeDetection {
 
 	public static void main(String[] args) throws IOException {
 		
-		int thresh1 = 60;
 		int thresh2 = 100;
 		
 
@@ -26,7 +20,7 @@ public class EdgeDetection {
 	
 	public static void canny(String srcPath, String dstPath, int highThresh, int lowThresh) throws IOException {
 		
-		Mat src, sobX, sobY, edge, laplace, morphologyEx, ori, mag, angle;
+		Mat src, sobX, sobY, edge, laplace, ori;
 
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 				
@@ -35,8 +29,6 @@ public class EdgeDetection {
 		sobY = new Mat();
 		edge = new Mat();
 		ori = new Mat();
-		mag = new Mat();
-		angle = new Mat();
 		laplace = new Mat();
 		
 		src = Imgcodecs.imread(srcPath);
