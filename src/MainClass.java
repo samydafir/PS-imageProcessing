@@ -45,7 +45,7 @@ public class MainClass {
 				double[] result;
 				double totalImages = 0;
 				double totalPercent = 0;
-				for(int i = 1; i <= 6; i++){
+				for(int i = 1; i <= 3; i++){
 					result = runTests(testPath + "/" + i, writeCategory(i));
 					totalImages += result[0];
 					totalPercent += (result[1] * result[0]);
