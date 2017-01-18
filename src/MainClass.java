@@ -24,20 +24,33 @@ public class MainClass {
 //	static boolean evalOrientation = true;
 	
 	static String testPath = "enhanced_rgb";
-	static int min = 5;
-	static int max = 800;
+	static int min = 100;
+	static int max = 1500;
 	static int histBinsLength = 50;
 	static int histBinsOrient = 20;
 	static boolean print = false;
 	static int lowThreshold = 33;
 	static int highThreshold = 100;
-	static int selection = 3;
+	static int selection = 2;
 	static int k = 5;
 	static boolean evalOrientation = true;
 
 	public static void main(String[] args) throws IOException {
 
 		System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
+		
+		if (args.length > 0) {
+			selection = Integer.parseInt(args[0]);
+			testPath = args[1];
+			min = Integer.parseInt(args[2]);
+			max = Integer.parseInt(args[3]);
+			histBinsLength = Integer.parseInt(args[4]);
+			histBinsOrient = Integer.parseInt(args[5]);
+			lowThreshold = Integer.parseInt(args[6]);
+			highThreshold = Integer.parseInt(args[7]);
+			k = Integer.parseInt(args[8]);
+		}
+		
 		
 		switch (selection){
 			case 1:
@@ -54,6 +67,15 @@ public class MainClass {
 				
 				//run tests using the created hist-file and images in the specified folder.
 				//also specify category
+				
+				BufferedWriter output = new BufferedWriter(new FileWriter(
+						"histograms/eval_histograms_" 
+						+ testPath + "_" 
+						+ min + "-" + max + "_" 
+						+ histBinsLength + "_" + histBinsOrient + "_" 
+						+ lowThreshold + "_" + highThreshold + "_"
+						+ k + ".txt"));
+				
 				double[] result;
 				double totalImages = 0;
 				double totalPercent = 0;
@@ -61,9 +83,11 @@ public class MainClass {
 					result = runTests(testPath + "/" + i, writeCategory(i));
 					totalImages += result[0];
 					totalPercent += (result[1] * result[0]);
-					System.out.println("Folder" + i + ": " + result[1]);
+					output.append("Folder" + i + ": " + result[1] + "\n");
 				}
-				System.out.println("Total: " + totalPercent/totalImages);
+				output.append("Total: " + totalPercent/totalImages);
+				output.flush();
+				output.close();
 				
 		}
 	}
@@ -86,7 +110,13 @@ public class MainClass {
 		String[] folders = new File(inputImagePath).list();
 		File currentFolder;
 		EdgeHistogram eh;
-		BufferedWriter output = new BufferedWriter(new FileWriter("histograms/histograms_"+ testPath + "_" + min + "-" + max + "_" + histBinsLength + "_"+ histBinsOrient + "_" + k + ".txt"));
+		BufferedWriter output = new BufferedWriter(new FileWriter(
+				"histograms/histograms_" 
+				+ testPath + "_" 
+				+ min + "-" + max + "_" 
+				+ histBinsLength + "_" + histBinsOrient + "_" 
+				+ lowThreshold + "_" + highThreshold + "_"
+				+ k + ".txt"));
 		for(String currFolder: folders){
 			currentFolder = new File(inputImagePath + "/" + currFolder);
 			if(currentFolder.isDirectory()){
@@ -127,7 +157,13 @@ public class MainClass {
 		int correctClass = 0;
 		EdgeHistogram eh;
 		int foundCategory = -1;
-		KNearestNeighbour a = new KNearestNeighbour("histograms/histograms_"+ testPath + "_" + min + "-" + max + "_" + histBinsLength + "_"+ histBinsOrient + "_" + k + ".txt");
+		KNearestNeighbour a = new KNearestNeighbour(
+				"histograms/histograms_" 
+				+ testPath + "_" 
+				+ min + "-" + max + "_" 
+				+ histBinsLength + "_" + histBinsOrient + "_" 
+				+ lowThreshold + "_" + highThreshold + "_"
+				+ k + ".txt");
 
 		for(String currTestImage: testImages){
 			vector = new ArrayList<>();
