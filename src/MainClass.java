@@ -11,7 +11,19 @@ import org.opencv.core.Core;
 
 public class MainClass {
 
-	static String testPath = "hsv";
+//	static String testPath = "hsv";
+//	static int min = 5;
+//	static int max = 800;
+//	static int histBinsLength = 50;
+//	static int histBinsOrient = 20;
+//	static boolean print = false;
+//	static int lowThreshold = 33;
+//	static int highThreshold = 100;
+//	static int selection = 2;
+//	static int k = 5;
+//	static boolean evalOrientation = true;
+	
+	static String testPath = "enhanced_rgb";
 	static int min = 5;
 	static int max = 800;
 	static int histBinsLength = 50;
@@ -30,8 +42,8 @@ public class MainClass {
 		switch (selection){
 			case 1:
 				//preprocessing of source folder
-				String[] colorModes = {/*"lab", "yuv", "hsl", "hsv", */"double_enhanced_rgb"};
-				PreprocessImage ppi = new PreprocessImage("enhanced_rgb/");
+				String[] colorModes = {"lab", "yuv", "hsl", "hsv", "double_enhanced_rgb"};
+				PreprocessImage ppi = new PreprocessImage("enhanced_rgb");
 				ppi.convert(colorModes);
 				break;
 			case 2:
@@ -49,7 +61,7 @@ public class MainClass {
 					result = runTests(testPath + "/" + i, writeCategory(i));
 					totalImages += result[0];
 					totalPercent += (result[1] * result[0]);
-					System.out.println("Folder" + i + ": " +result[1]);
+					System.out.println("Folder" + i + ": " + result[1]);
 				}
 				System.out.println("Total: " + totalPercent/totalImages);
 				
@@ -74,12 +86,12 @@ public class MainClass {
 		String[] folders = new File(inputImagePath).list();
 		File currentFolder;
 		EdgeHistogram eh;
-		BufferedWriter output = new BufferedWriter(new FileWriter("histograms\\histograms_" + min + "-" + max + "_" + histBinsLength + ".txt"));
+		BufferedWriter output = new BufferedWriter(new FileWriter("histograms/histograms_"+ testPath + "_" + min + "-" + max + "_" + histBinsLength + "_"+ histBinsOrient + "_" + k + ".txt"));
 		for(String currFolder: folders){
-			currentFolder = new File(inputImagePath + "\\" + currFolder);
+			currentFolder = new File(inputImagePath + "/" + currFolder);
 			if(currentFolder.isDirectory()){
-				for(String currImage: new File(inputImagePath + "\\" + currFolder).list()){
-					eh = new EdgeHistogram(inputImagePath + "\\" + currFolder + "\\" + currImage, 1000, highThreshold, lowThreshold);
+				for(String currImage: new File(inputImagePath + "/" + currFolder).list()){
+					eh = new EdgeHistogram(inputImagePath + "/" + currFolder + "/" + currImage, 1000, highThreshold, lowThreshold);
 					eh.calcHistogram();
 					output.append((eh.evaluatelength(min, max, histBinsLength, print)));
 					if(evalOrientation){
@@ -115,12 +127,12 @@ public class MainClass {
 		int correctClass = 0;
 		EdgeHistogram eh;
 		int foundCategory = -1;
-		KNearestNeighbour a = new KNearestNeighbour("histograms\\histograms_" + min + "-" + max + "_" + histBinsLength + ".txt");
+		KNearestNeighbour a = new KNearestNeighbour("histograms/histograms_"+ testPath + "_" + min + "-" + max + "_" + histBinsLength + "_"+ histBinsOrient + "_" + k + ".txt");
 
 		for(String currTestImage: testImages){
 			vector = new ArrayList<>();
 			//create feature vector for test image:
-			eh = new EdgeHistogram(testFolder + "\\" + currTestImage, 1000, highThreshold, lowThreshold);
+			eh = new EdgeHistogram(testFolder + "/" + currTestImage, 1000, highThreshold, lowThreshold);
 			eh.calcHistogram();
 			tempHistValues = eh.evaluatelength(min, max, histBinsLength, print).split(",");
 			for(int i = 0; i < tempHistValues.length; i++){
@@ -150,8 +162,8 @@ public class MainClass {
 			return 1;
 		case 3:
 		case 4:
-			return 2;
 		case 5:
+			return 2;
 		case 6:
 			return 3;
 		default:

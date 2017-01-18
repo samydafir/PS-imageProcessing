@@ -27,23 +27,21 @@ public class PreprocessImage {
 		String[] folders = new File(inputImagePath).list();
 		File currentFolder;
 		File outputFolder;
-		int count = 0;
 		
 		for(String currFolder: folders){
-			currentFolder = new File(inputImagePath + "\\" + currFolder);
+			currentFolder = new File(inputImagePath + "/" + currFolder);
 			if(currentFolder.isDirectory()){
-				count++;
 				for(String currMode: colorModes){
-					outputFolder = new File(currMode + "\\" + count);
+					outputFolder = new File(currMode + "/" + currFolder);
 					if(!outputFolder.exists()){
 						outputFolder.mkdirs();
 					}
-					for(String currImage: new File(inputImagePath + "\\" + currFolder).list()){
-						image = Imgcodecs.imread(inputImagePath + "\\" + currFolder + "\\" + currImage);
+					for(String currImage: new File(inputImagePath + "/" + currFolder).list()){
+						image = Imgcodecs.imread(inputImagePath + "/" + currFolder + "/" + currImage);
 						normalize();
 						clahe();
 						colorSpaceConvert(currMode);
-						Imgcodecs.imwrite(outputFolder +  "\\" + currImage, image);
+						Imgcodecs.imwrite(outputFolder +  "/" + currImage, image);
 					}
 				}
 			}
