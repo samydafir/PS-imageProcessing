@@ -1,0 +1,13 @@
+\frametitle{Edge Lengths}
+	\begin{block}{Algorithm}
+		\begin{verbatimtab}[4]
+			function measureEdge(pixel) {
+				length = 1
+				for each surrounding pixel p:
+				if p == white
+				length += measureEdge(p)
+
+				return length
+			}
+		\end{verbatimtab}
+	\end{block}
