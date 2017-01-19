@@ -372,36 +372,78 @@ function measureEdge(pixel) {
 \end{frame}
 
 \section{Results}
+
 \begin{frame}
-	\frametitle{Results}
-    \begin{block}{Colormodels compared}
-    	\begin{itemize}
-    		\item enhanced RGB
-    		\item HSV
-    		\item Twice enhanced RGB
-    	\end{itemize}
-    \end{block}
+	\frametitle{Evaluation}
+	\begin{block}{Normalizing}
+		\begin{itemize}
+            \item Two features: Length, Orientation
+			\item Histograms results are normalized
+			\item from 0.0 to 1.0
+			\item 0.0 is the lowest occuring value (usually 0.0 anyway)
+			\item 1.0 is the highest occuring value
+		\end{itemize}
+	\end{block}
+	\begin{block}{Results}
+		\begin{itemize}
+            \item Total \% of correct classified images
+			\item Class 2 weights stronger than class 3 (fewer images)
+		\end{itemize}
+	\end{block}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Results}
-    \begin{block}{Edgelength vs Edge Orientation vs both}
-    \end{block}
+	\frametitle{Colormodes}
+    \begin{center}
+    \includegraphics[width=\textwidth]{colormodes.eps}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Colormodes (without Edge Orientation)}
+    \begin{center}
+    \includegraphics[width=\textwidth]{colormodes_without_orient.eps}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{k - KNN}
+    \begin{center}
+    \includegraphics[width=\textwidth]{k.eps}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Edge Length (without Edge Orientation)}
+    \begin{center}
+    \includegraphics[width=\textwidth]{lengths_without_orient.eps}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Canny Thresholds (without Edge Orientation)}
+    \begin{center}
+    \includegraphics[width=\textwidth]{thresholds_without_orient.eps}
+    \end{center}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Problems}
 	\begin{block}{Encountered Problems}
 		\begin{itemize}
-			\item Fine tuning of parameters:\\
-			unlimited combinations
+			\item Fine tuning of parameters (unlimited combinations)
 			\item Understanding how to use CLAHE in OpenCV
 			\item Different parameter sets for different images
 			\item Normalizing features to weight equally
+            \item Can get over 80\% correctness without recognizing class 3
 		\end{itemize}
 	\end{block}
 \end{frame}
 
-
+\begin{frame}
+	\begin{center}
+        \Huge Thank You!\\
+    \end{center}
+\end{frame}
 
 \end{document}
