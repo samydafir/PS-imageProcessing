@@ -10,10 +10,10 @@ public class EdgeDetection {
 
 	public static void main(String[] args) throws IOException {
 		
-		int thresh2 = 100;
+		int thresh2 = 375;
 		
 
-		canny("examples/edge/src3.jpg", "dst/dst", thresh2, thresh2/3);
+		canny("/home/sebastian/git/PS-imageProcessing/double_enhanced_rgb/1/akh0001-cut-1112629220170.png", "/home/sebastian/Pictures/test/test", thresh2, thresh2/3);
 		
 	}
 	
@@ -51,10 +51,10 @@ public class EdgeDetection {
 		Imgproc.Laplacian(src, laplace, src.depth(), 3, 1, 0);
 		
 
-		Imgcodecs.imwrite(dstPath + "_canny.jpg", edge);
-		Imgcodecs.imwrite(dstPath + "_sobelX.jpg", sobX);
-		Imgcodecs.imwrite(dstPath + "_sobelY.jpg", sobY);
-		Imgcodecs.imwrite(dstPath + "_laplacian.jpg", laplace);
+		Imgcodecs.imwrite(dstPath + "_canny.png", edge);
+//		Imgcodecs.imwrite(dstPath + "_sobelX.jpg", sobX);
+//		Imgcodecs.imwrite(dstPath + "_sobelY.jpg", sobY);
+//		Imgcodecs.imwrite(dstPath + "_laplacian.jpg", laplace);
 		
 		
 	}

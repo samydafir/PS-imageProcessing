@@ -79,11 +79,16 @@ public class MainClass {
 				double[] result;
 				double totalImages = 0;
 				double totalPercent = 0;
+				String[] foldersArr = new String[3];
 				for(int i = 1; i <= 3; i++){
 					result = runTests(testPath + "/" + i, writeCategory(i));
 					totalImages += result[0];
 					totalPercent += (result[1] * result[0]);
-					output.append("Folder" + i + ": " + result[1] + "\n");
+					foldersArr[i-1] = "Folder" + i + ": " + result[1] + "\n";
+				}
+				output.append(totalPercent/totalImages + "\n");
+				for (String s : foldersArr) {
+					output.append(s);
 				}
 				output.append("Total: " + totalPercent/totalImages);
 				output.flush();

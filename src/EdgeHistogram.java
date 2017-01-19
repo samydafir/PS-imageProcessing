@@ -92,8 +92,12 @@ public class EdgeHistogram {
 	}
 
 	public String evaluatelength(int minThreshold, int maxThreshold, int numOfBins, boolean print){
-		int min = edgeLengths.getFirst();
-		int max = edgeLengths.getFirst();
+		int min = 0;
+		int max = 0;
+		if (edgeLengths.size() > 0) {
+			min = edgeLengths.getFirst();
+			max = edgeLengths.getFirst();
+		}
 		int diff, rangePerBin;
 		int[] amounts = new int[numOfBins];
 		String result;
