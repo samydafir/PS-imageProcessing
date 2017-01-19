@@ -367,21 +367,11 @@ function measureEdge(pixel) {
 		\item Weights of features:  all equally significant
 		\\Lengths: per edge
 		\\Orientation: per pixel
-		
 	\end{itemize}
 	
 \end{frame}
 
 \section{Results}
-\begin{frame}
-	\frametitle{Problems}
-    \begin{block}{Encountered Problems}
-	    \begin{itemize}
-		    \item Fine tuning of parameters
-	    \end{itemize}
-    \end{block}
-\end{frame}
-
 \begin{frame}
 	\frametitle{Results}
     \begin{block}{Colormodels compared}
@@ -398,5 +388,20 @@ function measureEdge(pixel) {
     \begin{block}{Edgelength vs Edge Orientation vs both}
     \end{block}
 \end{frame}
+
+\begin{frame}
+	\frametitle{Problems}
+	\begin{block}{Encountered Problems}
+		\begin{itemize}
+			\item Fine tuning of parameters:\\
+			unlimited combinations
+			\item Understanding how to use CLAHE in OpenCV
+			\item Different parameter sets for different images
+			\item Normalizing features to weight equally
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+
 
 \end{document}
