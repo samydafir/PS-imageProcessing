@@ -1,13 +1,24 @@
  \documentclass{beamer}
 \usetheme{Berlin}
 \usecolortheme{beaver}
-\usepackage[ngerman]{babel}
+\usepackage[english]{babel}
 \usepackage{graphicx}
 \usepackage[utf8]{inputenc}
 \usepackage{times}
 \usepackage[T1]{fontenc}
 \usepackage{subfigure}
 \usepackage{moreverb}
+
+\AtBeginSection[]{
+	\begin{frame}
+		\vfill
+		\centering
+		\begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+			\usebeamerfont{title}\insertsectionhead\par%
+		\end{beamercolorbox}
+		\vfill
+	\end{frame}
+}
 
 \title{Classifying Colon Cancer Colonoscopy Images Using Edge Histograms}
 \author[]{Samy Dafir \\Dominik Baumgartner \\Sebastian Strumegger}
@@ -131,7 +142,7 @@
 		\item Development and Frameworks
 		\item Image Enhancement
 		\item Edge Detection
-		\item Histograms
+		\item Edge Histograms
 		\item Edge Lengths
 		\item Edge Orientation
 		\item Image Classification
@@ -167,11 +178,12 @@
 	\frametitle{Image Enhancement and Conversion}
 	\textbf{RGB to HSV}
 	\\
+	\vspace{3mm}
 	\includegraphics[width = 4cm]{before_3.png}
 	\raisebox{0.75\height}{\includegraphics[width = 1.5cm]{arrow_right.png}}
 	\includegraphics[width = 4cm]{after_3.jpg}
 	\begin{verbatimtab}
-Imgproc.cvtColor(matrix, matrix, colorSpace)
+Imgproc.cvtColor(srcMatrix, dstMatrix, colorSpace)
 colorSpace: e.g. Imgproc.COLOR_RGB2HSV
 	\end{verbatimtab}
 \end{frame}
@@ -180,7 +192,7 @@ colorSpace: e.g. Imgproc.COLOR_RGB2HSV
 	\frametitle{Image Enhancement and Conversion}
 	Normalization:
 	\begin{verbatimtab}
-Core.normalize(matrix,matrix,255,0,
+Core.normalize(srcMatrix, dstMatrix, 255, 0,
  Core.NORM_MINMAX);
 	\end{verbatimtab}
 	
@@ -224,7 +236,7 @@ Core.insertChannel(channel, matrix, i);
 	\raisebox{0.75\height}{\includegraphics[width = 1.5cm]{arrow_right.png}}
 	\includegraphics[width = 4cm]{edges_detected.png}		
 	\begin{verbatimtab}
-Imgproc.Canny(matrix, matrix, 
+Imgproc.Canny(srcMatrix, dstMatrix, 
  lowThresh, highThresh);
 	\end{verbatimtab}
 \end{frame}
@@ -235,8 +247,8 @@ Imgproc.Canny(matrix, matrix,
 		\begin{itemize}
 			\item Characteristics of an image e.g. edge lengths
 			\item Partition characteristic attributes into bins
-			\item In our case: Edge lengths \& orientations
-			\item Length: Image has\\
+			\item In our case: edge lengths \& orientations
+			\item Length: image has\\
 			5 edges of length 0 - 20 pixels\\
 			20 edges of length 100 - 120 pixels
 		\end{itemize}
@@ -260,8 +272,8 @@ Imgproc.Canny(matrix, matrix,
 		\item Example:\\
 		\begin{verbatimtab}[1]
 210.0,3.0,170.0,142.0,126.0,93.0,32.0,16.0,1
-192.0,2.0,181.0,139.0,119.0,87.0,32.0,17.0,1
-143.0,1.0,172.0,147.0,128.0,91.0,30.0,16.0,1
+192.0,2.0,181.0,139.0,119.0,87.0,32.0,17.0,2
+143.0,1.0,172.0,147.0,128.0,91.0,30.0,16.0,3
 		\end{verbatimtab}
 		
 	\end{itemize}
@@ -272,10 +284,10 @@ Imgproc.Canny(matrix, matrix,
 	\frametitle{Edge Lengths}
 	\begin{block}{Prequisites}
 		\begin{itemize}
-			\item Image with detected Edges
+			\item Image with detected edges
 			\item Edges white
 			\item Rest black
-			\item Not entirely given $\rightarrow$ Threshold set at grayscale 200
+			\item Not entirely given $\rightarrow$ threshold set at grayscale 200
 		\end{itemize}
 	\end{block}
 	
@@ -289,8 +301,8 @@ Imgproc.Canny(matrix, matrix,
 			\item Check if pixel is white $\rightarrow$ new edge found
 			\item Check immediate neighbours: if white $\rightarrow$ add pixel to edge
 			\item Follow white path until no more connected white pixels
-			\item Add all passes pixels to Collection of used pixels
-			\item Add one to category with detected length
+			\item Add all passed pixels to collection of used pixels
+			\item Add 1 to bin with detected length
 			\item Continue iterating and start at 1
 			
 		\end{enumerate}
@@ -322,7 +334,7 @@ function measureEdge(pixel) {
 		\item Extract edge orientations from image (OpenCV)
 		\item Partition edges into bins
 		\item Bin content: pixels part of edge with certain orientation
-		\item Category: range of angles
+		\item Bin: range of angles
 	\end{itemize}
 	
 	
@@ -332,9 +344,9 @@ function measureEdge(pixel) {
 	\frametitle{Image Classification}
 	\begin{enumerate}
 		\item Classify all example images $\rightarrow$ create file with histograms
-		\item Create List of Feature Vectors
-		\item Enhance image to classify
-		\item Create Feature Vector
+		\item Create list of feature vectors
+		\item Enhance image to be classified
+		\item Create feature vector
 		\item KNN: Compare new vector all vectors in list\\
 		$\rightarrow$ euclidean distance\\
 		\item Select K vectors with smallest distance
@@ -360,7 +372,7 @@ function measureEdge(pixel) {
 	
 \end{frame}
 
-\section{Problems}
+\section{Results}
 \begin{frame}
 	\frametitle{Problems}
     \begin{block}{Encountered Problems}
@@ -370,7 +382,6 @@ function measureEdge(pixel) {
     \end{block}
 \end{frame}
 
-\section{Results}
 \begin{frame}
 	\frametitle{Results}
     \begin{block}{Colormodels compared}
