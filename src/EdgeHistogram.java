@@ -99,7 +99,7 @@ public class EdgeHistogram {
 			max = edgeLengths.getFirst();
 		}
 		int diff, rangePerBin;
-		int[] amounts = new int[numOfBins];
+		double[] amounts = new double[numOfBins];
 		String result;
 
 		diff = maxThreshold - minThreshold;
@@ -115,6 +115,8 @@ public class EdgeHistogram {
 			if(currLength >= minThreshold && currLength <= maxThreshold)
 			amounts[((int)Math.ceil((double)currLength / (double)maxThreshold * numOfBins)) - 1] ++;
 		}
+		
+		amounts = normalize(amounts);
 
 		StringBuilder sb = new StringBuilder();
 
@@ -125,7 +127,7 @@ public class EdgeHistogram {
 			System.out.println("bin values:");
 		}
 		for(int i = 0; i < amounts.length; i++){
-			sb.append(amounts[i] + ".0,");
+			sb.append(amounts[i] + ",");
 			if(print){
 				System.out.print(amounts[i] + ",");
 				System.out.println("range: " + (minThreshold + i * rangePerBin) + "-" + (minThreshold + (i + 1) * rangePerBin));
@@ -140,7 +142,7 @@ public class EdgeHistogram {
 		double minAngle = edgeOrientation.getFirst();
 		double maxAngle = edgeOrientation.getFirst();
 		int rangePerBin;
-		int[] amounts = new int[numOfBins];
+		double[] amounts = new double[numOfBins];
 		String result;
 
 		rangePerBin = (int)((maxDegree) / numOfBins);
@@ -153,6 +155,8 @@ public class EdgeHistogram {
 			}
 			amounts[((int)Math.ceil((double)currAngle / numOfBins))] ++;
 		}
+		
+		amounts = normalize(amounts);
 
 		StringBuilder sb = new StringBuilder();
 
@@ -163,7 +167,7 @@ public class EdgeHistogram {
 			System.out.println("bin values:");
 		}
 		for(int i = 0; i < amounts.length; i++){
-			sb.append((int)(((double)amounts[i])/100) + ".0,");
+			sb.append(amounts[i] + ",");
 			if(print){
 				System.out.print(amounts[i] + " |");
 				System.out.println("range: " + i * rangePerBin + "-" + (i + 1) * rangePerBin);
@@ -172,4 +176,23 @@ public class EdgeHistogram {
 		result = sb.toString();
 		return result.substring(0, result.length() - 1);
 	}
+
+
+	public double[] normalize(double[] input){
+		double max = 1;
+		double[] normalized = new double[input.length];
+		for(double currValue: input){
+			if(currValue > max)
+				max = currValue;
+		}
+		
+		for(int i = 0; i < input.length; i++){
+			normalized[i] = input[i] / max;
+		}
+		return normalized;
+	}
+
 }
+
+
+

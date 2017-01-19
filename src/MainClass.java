@@ -31,7 +31,7 @@ public class MainClass {
 	static boolean print = false;
 	static int lowThreshold = 33;
 	static int highThreshold = 100;
-	static int selection = 2;
+	static int selection = 3;
 	static int k = 5;
 	static boolean evalOrientation = true;
 
@@ -81,7 +81,7 @@ public class MainClass {
 				double totalPercent = 0;
 				String[] foldersArr = new String[3];
 				for(int i = 1; i <= 3; i++){
-					result = runTests(testPath + "/" + i, writeCategory(i));
+					result = runTests(testPath + "" + File.separator + "" + i, writeCategory(i));
 					totalImages += result[0];
 					totalPercent += (result[1] * result[0]);
 					foldersArr[i-1] = "Folder" + i + ": " + result[1] + "\n";
@@ -123,10 +123,10 @@ public class MainClass {
 				+ lowThreshold + "_" + highThreshold + "_"
 				+ k + ".txt"));
 		for(String currFolder: folders){
-			currentFolder = new File(inputImagePath + "/" + currFolder);
+			currentFolder = new File(inputImagePath + "" + File.separator + "" + currFolder);
 			if(currentFolder.isDirectory()){
-				for(String currImage: new File(inputImagePath + "/" + currFolder).list()){
-					eh = new EdgeHistogram(inputImagePath + "/" + currFolder + "/" + currImage, 1000, highThreshold, lowThreshold);
+				for(String currImage: new File(inputImagePath + "" + File.separator + "" + currFolder).list()){
+					eh = new EdgeHistogram(inputImagePath + "" + File.separator + "" + currFolder + "" + File.separator + "" + currImage, 1000, highThreshold, lowThreshold);
 					eh.calcHistogram();
 					output.append((eh.evaluatelength(min, max, histBinsLength, print)));
 					if(evalOrientation){
@@ -173,7 +173,7 @@ public class MainClass {
 		for(String currTestImage: testImages){
 			vector = new ArrayList<>();
 			//create feature vector for test image:
-			eh = new EdgeHistogram(testFolder + "/" + currTestImage, 1000, highThreshold, lowThreshold);
+			eh = new EdgeHistogram(testFolder + "" + File.separator + "" + currTestImage, 1000, highThreshold, lowThreshold);
 			eh.calcHistogram();
 			tempHistValues = eh.evaluatelength(min, max, histBinsLength, print).split(",");
 			for(int i = 0; i < tempHistValues.length; i++){
