@@ -1,0 +1,16 @@
+Samy Dafir:
+    - General research (clahe, colorspaces, ...) and learning how to use OpenCv 
+      (includes looking for java documentation): 10 hrs
+    - Implementation of Preprocessing:
+        first try: Trying to do an own implementation: 8 hrs
+        Second Try: Using OpenCv: 5 hrs
+    - Implementing KNN and "leave one image out": 3 hrs
+    - Implementation of edge length algorithm, edge length histograms
+      and required surrounding functionality: 9 hrs
+    - Additional implementation to integrate all features within one single application:
+      Also fixing errors in KNN and changing the implemented "leave one image out" to the required
+      "leave one patient out"
+      7 hrs
+    - Testing, changing Main Class for betterand easier testing  finding and fixing bugs: 7 hrs
+    - Preparing the presentation: 5 hrs
+    - Total: 54 hrs
