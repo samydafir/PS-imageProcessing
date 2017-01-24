@@ -14,3 +14,11 @@ Samy Dafir:
     - Testing, changing Main Class for betterand easier testing  finding and fixing bugs: 7 hrs
     - Preparing the presentation: 5 hrs
     - Total: 54 hrs
+
+Dominik Baumgartner:
+    - General research and learning how to use OpenCv: 10 hrs
+    - Research in edge Curvature and Orientation: 10 hrs
+    - Implementation of edge orientation algorithm: 10 hrs
+    - Testing: 5 hrs
+    - Preparing the presentation: 5 hrs
+    - Total: 40 hrs
