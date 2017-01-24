@@ -22,3 +22,14 @@ Dominik Baumgartner:
     - Testing: 5 hrs
     - Preparing the presentation: 5 hrs
     - Total: 40 hrs
+    
+Sebastian Strumegger:
+    - Getting OpenCV to work properly and understand it's usage: 8 hrs
+    - Research about Edge Detection and Edge Histograms: 10 hrs
+    - Implementation of edge detection and experiment with it: 10 hrs
+    - Trying to process edge lengths with OpenCV's inbuilt histogram functions (did not succeed): 5 hrs
+    - Several bugfixes and modifications for proper testing: 5 hrs
+    - Shell scripts for testing and plotting: 2 hrs
+    - Extensive testing: 8 hrs
+    - Preparere plots and presentation: 4 hrs
+    - Total: 52 hrs
